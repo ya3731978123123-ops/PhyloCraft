@@ -38,6 +38,26 @@ from src.config import DATA_DIR, OUTPUT_DIR
 
 
 NCBI_PRESETS = {
+    "🌍 生命三域之樹 16S/18S rRNA (古菌、細菌、真核生物 - Carl Woese 經典系統)": {
+        "gene": "16S",
+        "taxa": (
+            "# 【細菌域 Bacteria - 16S rRNA】\n"
+            "NR_024570.1  # 大腸桿菌 Escherichia coli (1450 bp)\n"
+            "NR_102783.2  # 枯草桿菌 Bacillus subtilis (1550 bp)\n"
+            "NR_029153.1  # 海棲熱袍菌 Thermotoga maritima (1432 bp)\n"
+            "NR_074311.1  # 藍細菌 Synechocystis sp. PCC 6803 (1489 bp)\n\n"
+            "# 【古菌域 Archaea - 16S rRNA】\n"
+            "NR_074219.1  # 詹氏甲烷球菌 Methanocaldococcus jannaschii (1473 bp)\n"
+            "NR_074304.1  # 硫化葉菌 Sulfolobus solfataricus (1489 bp)\n"
+            "NR_074208.1  # 鹽生鹽桿菌 Halobacterium salinarum (1472 bp)\n"
+            "NR_074218.1  # 火山嗜鹽古菌 Haloferax volcanii (1473 bp)\n\n"
+            "# 【真核域 Eukaryota - 18S rRNA】\n"
+            "J01353.1     # 釀酒酵母 Saccharomyces cerevisiae (1798 bp)\n"
+            "X16077.1     # 擬南芥 Arabidopsis thaliana (1902 bp)\n"
+            "NR_003286.4  # 智人 Homo sapiens (1869 bp)\n"
+            "X56165.1     # 四膜蟲 Tetrahymena thermophila (1753 bp)"
+        )
+    },
     "被子植物乙烯受體 ETR1 (Ethylene Receptors)": {
         "gene": "ETR1",
         "taxa": (

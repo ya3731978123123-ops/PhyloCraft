@@ -123,6 +123,17 @@ class TreeCanvasWidget(QWidget):
 
         r1.addStretch()
 
+        self.search_edit = QLineEdit()
+        self.search_edit.setPlaceholderText("搜尋物種...")
+        self.search_edit.setFixedWidth(100)
+        self.search_edit.textChanged.connect(self.on_search_changed)
+        r1.addWidget(self.search_edit)
+
+        self.newick_btn = QPushButton("複製 Newick")
+        self.newick_btn.setToolTip("複製當前演化樹之 Newick 字串至系統剪貼簿")
+        self.newick_btn.clicked.connect(self.copy_newick)
+        r1.addWidget(self.newick_btn)
+
         self.export_btn = QPushButton("導出插圖 (Export)...")
         self.export_btn.setObjectName("primary_button")
         self.export_btn.setFixedHeight(28)
@@ -162,16 +173,40 @@ class TreeCanvasWidget(QWidget):
         self.font_spin = QSpinBox()
         self.font_spin.setRange(4, 24)
         self.font_spin.setValue(10)
-        self.font_spin.setFixedWidth(66)
+        self.font_spin.setFixedWidth(72)
+        self.font_spin.setFixedHeight(26)
         self.font_spin.setSuffix(" pt")
-        self.font_spin.setStyleSheet("QSpinBox { padding: 1px 2px; }")
+        self.font_spin.setStyleSheet("""
+            QSpinBox {
+                padding-left: 4px;
+                padding-right: 18px;
+                border: 1px solid #cbd5e1;
+                border-radius: 4px;
+                background-color: #ffffff;
+            }
+            QSpinBox::up-button {
+                subcontrol-origin: border;
+                subcontrol-position: top right;
+                width: 16px;
+                height: 12px;
+                border-left: 1px solid #cbd5e1;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            QSpinBox::down-button {
+                subcontrol-origin: border;
+                subcontrol-position: bottom right;
+                width: 16px;
+                height: 12px;
+                border-left: 1px solid #cbd5e1;
+            }
+        """)
         self.font_spin.setToolTip("調整演化樹末端物種標籤字體大小 (4 ~ 24 pt)")
         self.font_spin.valueChanged.connect(self.redraw_tree)
         r2.addWidget(self.font_spin)
 
-        self.reset_view_btn = QPushButton("1:1")
-        self.reset_view_btn.setFixedWidth(40)
-        self.reset_view_btn.setToolTip("重設分枝拉伸與字體大小至預設 1:1 標準視圖")
+        self.reset_view_btn = QPushButton("重設")
+        self.reset_view_btn.setFixedWidth(46)
+        self.reset_view_btn.setToolTip("重設分枝拉伸與字體大小至預設標準視圖")
         self.reset_view_btn.clicked.connect(self.reset_view)
         r2.addWidget(self.reset_view_btn)
 
@@ -190,8 +225,8 @@ class TreeCanvasWidget(QWidget):
         r2.addWidget(self.midpoint_btn)
 
         self.outgroup_combo = QComboBox()
-        self.outgroup_combo.setMinimumWidth(240)
-        self.outgroup_combo.setMaximumWidth(340)
+        self.outgroup_combo.setMinimumWidth(220)
+        self.outgroup_combo.setMaximumWidth(320)
         self.outgroup_combo.setToolTip("選取作為演化基底的外群物種")
         r2.addWidget(self.outgroup_combo)
 
@@ -210,17 +245,6 @@ class TreeCanvasWidget(QWidget):
         r2.addWidget(self.root_status_label)
 
         r2.addStretch()
-
-        self.search_edit = QLineEdit()
-        self.search_edit.setPlaceholderText("搜尋物種...")
-        self.search_edit.setFixedWidth(100)
-        self.search_edit.textChanged.connect(self.on_search_changed)
-        r2.addWidget(self.search_edit)
-
-        self.newick_btn = QPushButton("複製 Newick")
-        self.newick_btn.setToolTip("複製當前演化樹之 Newick 字串至系統剪貼簿")
-        self.newick_btn.clicked.connect(self.copy_newick)
-        r2.addWidget(self.newick_btn)
 
         c_layout.addLayout(r2)
 
