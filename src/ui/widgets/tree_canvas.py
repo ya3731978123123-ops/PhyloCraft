@@ -146,7 +146,7 @@ class TreeCanvasWidget(QWidget):
         r2.addWidget(self.h_slider)
         self.h_label = QLabel("1.0x")
         self.h_label.setStyleSheet("color: #006644; font-weight: bold;")
-        self.h_label.setFixedWidth(28)
+        self.h_label.setFixedWidth(34)
         r2.addWidget(self.h_label)
 
         r2.addWidget(QLabel("垂直:"))
@@ -162,7 +162,10 @@ class TreeCanvasWidget(QWidget):
         self.font_spin = QSpinBox()
         self.font_spin.setRange(4, 24)
         self.font_spin.setValue(10)
-        self.font_spin.setFixedWidth(52)
+        self.font_spin.setFixedWidth(66)
+        self.font_spin.setSuffix(" pt")
+        self.font_spin.setStyleSheet("QSpinBox { padding: 1px 2px; }")
+        self.font_spin.setToolTip("調整演化樹末端物種標籤字體大小 (4 ~ 24 pt)")
         self.font_spin.valueChanged.connect(self.redraw_tree)
         r2.addWidget(self.font_spin)
 
