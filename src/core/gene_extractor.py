@@ -84,8 +84,9 @@ class GeneExtractor:
             "ND6"
         ],
         "12S": ["12S RRNA", "12S RIBOSOMAL RNA", "RNR1"],
-        "16S": ["16S RRNA", "16S RIBOSOMAL RNA", "RNR2"],
-        "18S": ["18S RRNA", "18S RIBOSOMAL RNA", "SSU RRNA"],
+        "16S": ["16S RRNA", "16S RIBOSOMAL RNA", "RNR2", "18S RRNA", "18S RIBOSOMAL RNA", "SSU RRNA"],
+        "18S": ["18S RRNA", "18S RIBOSOMAL RNA", "SSU RRNA", "16S RRNA", "16S RIBOSOMAL RNA"],
+        "SSU": ["16S RRNA", "16S RIBOSOMAL RNA", "18S RRNA", "18S RIBOSOMAL RNA", "SSU RRNA", "SMALL SUBUNIT RIBOSOMAL RNA", "RNR2"],
         "28S": ["28S RRNA", "28S RIBOSOMAL RNA", "LSU RRNA"],
         "ITS": ["INTERNAL TRANSCRIBED SPACER", "ITS1", "ITS2"],
         "RBCL": ["RIBULOSE-1,5-BISPHOSPHATE CARBOXYLASE/OXYGENASE LARGE SUBUNIT", "RIBULOSE-1,5-BISPHOSPHATE CARBOXYLASE"],
@@ -1230,7 +1231,7 @@ class GeneExtractor:
                 break
 
         # Prioritize CDS for coding genes, or rRNA for RNA genes
-        is_rna_target = any(r in target_norm for r in ("16S", "12S", "RRNA", "RNR"))
+        is_rna_target = any(r in target_norm for r in ("16S", "18S", "SSU", "12S", "28S", "RRNA", "RNR"))
         if is_rna_target:
             primary_types = ("rRNA",)
             secondary_types = ("gene", "misc_RNA")

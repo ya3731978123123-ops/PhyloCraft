@@ -1,12 +1,12 @@
 ﻿領域 (Domain),物種名稱 (Organism),NCBI 登錄號,標的基因,長度 (bp),SHA-256 指紋,官方連結
+Archaea,Haloferax volcanii NR,074218.1,16S/18S rRNA,1473,0adbdbd10c2d90679fae3bff8f6d181821669a02f6740cdb776d946e64dbe0c2,https://www.ncbi.nlm.nih.gov/nuccore/074218.1
+Archaea,Sulfolobus mongibelli NR,177349.1,16S/18S rRNA,1498,bdb1e37c080b75ffb26abc5d6e5b9cf5d44d6f9dc4f914d38667aadef6e6f460,https://www.ncbi.nlm.nih.gov/nuccore/177349.1
+Archaea,Pyrococcus yayanosii NR,116412.1,16S/18S rRNA,1424,fc47a4e1c0ef6973d4b3b41d2a55e45e1947c7284c9f6b3629541e563f30c122,https://www.ncbi.nlm.nih.gov/nuccore/116412.1
+Archaea,Methanothermobacter crinale NR,117968.1,16S/18S rRNA,1451,ccfba88357c93aca20d4898ad527855d0658eeb41f0d19ae1858bd7da79572db,https://www.ncbi.nlm.nih.gov/nuccore/117968.1
 Bacteria,Escherichia coli NR,024570.1,16S/18S rRNA,1450,01d18d5c6777b7962743d55a93f681118dc0bc2db37b372e43ec81593238f18a,https://www.ncbi.nlm.nih.gov/nuccore/024570.1
 Bacteria,Bacillus subtilis NR,102783.2,16S/18S rRNA,1550,06cf0e4b260c4cb7c121b88825cf87d083ad1a2f4a4c721444605eae7884a015,https://www.ncbi.nlm.nih.gov/nuccore/102783.2
-Bacteria,Thermotoga maritima NR,029153.1,16S/18S rRNA,1432,8722b0cc0ff449d317336bf6e66062994229fa437ccc2d798c49463a58239ff6,https://www.ncbi.nlm.nih.gov/nuccore/029153.1
+Bacteria,Thermotoga maritima NR,102775.2,16S/18S rRNA,1558,33975e1845a1af7cb0bce47b649a8ee759652bb6dff0ae08057be9c8cc0ce8e7,https://www.ncbi.nlm.nih.gov/nuccore/102775.2
 Bacteria,Synechocystis PCC6803 NR,074311.1,16S/18S rRNA,1489,fc94464e676ffa3c0d91c7d0b59e8894bce2e385b0f7c5a00d903b08d76e58e6,https://www.ncbi.nlm.nih.gov/nuccore/074311.1
-Archaea,Methanocaldococcus jannaschii NR,074219.1,16S/18S rRNA,1473,fa3cfc5704a32732a5f47dff7677277f9fd7281e0d6563e84aadeb19d7013200,https://www.ncbi.nlm.nih.gov/nuccore/074219.1
-Archaea,Sulfolobus solfataricus NR,074304.1,16S/18S rRNA,1489,ede3ae43cea5525c289cc142e0f468b707a67e7bbe865be3ac31a854bba5d737,https://www.ncbi.nlm.nih.gov/nuccore/074304.1
-Archaea,Halobacterium salinarum NR,074208.1,16S/18S rRNA,1472,72b3a619075c594592c93ad056b6943741d177a01bff33fb15bfe36bb6dabbae,https://www.ncbi.nlm.nih.gov/nuccore/074208.1
-Archaea,Haloferax volcanii NR,074218.1,16S/18S rRNA,1473,0adbdbd10c2d90679fae3bff8f6d181821669a02f6740cdb776d946e64dbe0c2,https://www.ncbi.nlm.nih.gov/nuccore/074218.1
 Eukaryota,Saccharomyces cerevisiae,J01353.1,16S/18S rRNA,1798,e1b383ef9137beafc44108469f37faea145bd8addf42a598b2ed85df40b88c56,https://www.ncbi.nlm.nih.gov/nuccore/J01353.1
 Eukaryota,Arabidopsis thaliana,X16077.1,16S/18S rRNA,1902,8b18729ab2b1cd867aabb76e3a00e9cbc258acb1b3963a873412322c6e602cd0,https://www.ncbi.nlm.nih.gov/nuccore/X16077.1
 Eukaryota,Homo sapiens NR,003286.4,16S/18S rRNA,1869,0815878960d09fc21f5d11bb71bcdae09c52f246341e996e7679ba7d3cbd8c50,https://www.ncbi.nlm.nih.gov/nuccore/003286.4
