@@ -300,20 +300,14 @@ class NCBIGeneTab(QWidget):
         l_vbox.setContentsMargins(10, 12, 14, 12)
         l_vbox.setSpacing(8)
 
-        # Preset Row
-        l_vbox.addWidget(QLabel("<b>經典研究與論文範例 (Presets):</b>"))
-        self.preset_combo = QComboBox()
-        self.preset_combo.addItem("-- 請選擇經典範本或手動填寫 --")
-        for p_name in NCBI_PRESETS.keys():
-            self.preset_combo.addItem(p_name)
-        self.preset_combo.currentTextChanged.connect(self.on_preset_changed)
-        l_vbox.addWidget(self.preset_combo)
-
-        # Gene Selection Row
-        l_vbox.addWidget(QLabel("<b>目標基因代號或中文蛋白名 (Target Gene):</b>"))
+        # 1. Target Gene Input (Primary Research Focus)
+        l_vbox.addWidget(QLabel("<b>1. 目標基因代號或蛋白名 (Target Gene):</b>"))
         self.gene_combo = QComboBox()
         self.gene_combo.setEditable(True)
+        if self.gene_combo.lineEdit():
+            self.gene_combo.lineEdit().setPlaceholderText("輸入任意欲研究之基因 (如 ETR1, rbcL, SSU, 16S, TP53...)")
         self.gene_combo.addItems([
+            "SSU / 16S / 18S 核糖體小次單元 RNA (生命三域演化經典)",
             "ETR1 / 乙烯受體 1 (植物荷爾蒙感知, ~2200 bp)",
             "rbcL / 核酮糖二磷酸羧化酶大亞基 (植物光合作用核心, ~1430 bp)",
             "matK / 成熟酶 K (植物葉綠體DNA條形碼, ~1530 bp)",
@@ -337,15 +331,15 @@ class NCBIGeneTab(QWidget):
         ])
         l_vbox.addWidget(self.gene_combo)
 
-        # Accession Editor
-        l_vbox.addWidget(QLabel("<b>NCBI 登錄號清單或物種中文俗名:</b>"))
+        # 2. Accession & Species Input (Primary Research Focus)
+        l_vbox.addWidget(QLabel("<b>2. NCBI 登錄號清單或物種俗名/學名 (Taxa / Accessions):</b>"))
         self.taxa_edit = QTextEdit()
         self.taxa_edit.setPlaceholderText(
-            "支援輸入格式：\n"
-            "1. NCBI 登錄號 (如 NM_105305.4)\n"
-            "2. 植物或物種中文俗名 (如 擬南芥、水稻、番茄、玉米、大豆、茶樹、蘋果)\n"
-            "3. 物種學名 (如 Arabidopsis thaliana)\n"
-            "後方亦可加上 # 物種備註。系統自動支援中文俗名智能解析！"
+            "自由輸入任何格式（支援通用自訂）：\n"
+            "1. 任意 NCBI 登錄號 (如 NM_105305.4, NR_024570.1, NC_000932.1)\n"
+            "2. 植物或動物物種中文俗名 (如 擬南芥、水稻、番茄、玉米、大豆、茶樹)\n"
+            "3. 物種學名 (如 Arabidopsis thaliana, Homo sapiens)\n"
+            "每行一筆，系統將完全依據您自訂之研究數據動態至 NCBI 檢索與精準切片！"
         )
         self.taxa_edit.setFixedHeight(95)
         l_vbox.addWidget(self.taxa_edit)
@@ -356,6 +350,23 @@ class NCBIGeneTab(QWidget):
         self.btn_resolve_taxa.setToolTip("輸入植物中文俗名（如擬南芥、番茄、水稻、玉米、茶樹），一鍵自動搜尋並解析為 NCBI 官方 RefSeq 登錄號")
         self.btn_resolve_taxa.clicked.connect(self.resolve_vernacular_names)
         l_vbox.addWidget(self.btn_resolve_taxa)
+
+        # 3. Optional Presets (Secondary Helper - 非核心流程，供快速測試)
+        preset_frame = QFrame()
+        preset_frame.setStyleSheet("background-color: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 4px; padding: 4px 6px;")
+        p_box = QVBoxLayout(preset_frame)
+        p_box.setContentsMargins(4, 4, 4, 4)
+        p_box.setSpacing(4)
+        p_lbl = QLabel("💡 <i>快速載入示範測試資料 (可選，供快速體驗，可完全不使用)：</i>")
+        p_lbl.setStyleSheet("color: #64748B; font-size: 11px;")
+        p_box.addWidget(p_lbl)
+        self.preset_combo = QComboBox()
+        self.preset_combo.addItem("-- 自行輸入任意基因與物種 (不使用範本) --")
+        for p_name in NCBI_PRESETS.keys():
+            self.preset_combo.addItem(p_name)
+        self.preset_combo.currentTextChanged.connect(self.on_preset_changed)
+        p_box.addWidget(self.preset_combo)
+        l_vbox.addWidget(preset_frame)
 
         # Researcher Customization Options (研究者進階客製選項)
         custom_box = QGroupBox("⚙️ 研究者進階設定 (Customization)")
@@ -559,11 +570,20 @@ class NCBIGeneTab(QWidget):
         if text in NCBI_PRESETS:
             p_data = NCBI_PRESETS[text]
             g_sym = p_data["gene"].upper()
+            found = False
             for idx in range(self.gene_combo.count()):
                 item_t = self.gene_combo.itemText(idx).upper()
-                if item_t.startswith(g_sym) or f" {g_sym} " in f" {item_t} " or f"/{g_sym}" in item_t:
+                if (
+                    item_t.startswith(g_sym)
+                    or f" {g_sym} " in f" {item_t} "
+                    or f"/{g_sym}" in item_t
+                    or (g_sym == "SSU" and ("16S" in item_t or "18S" in item_t))
+                ):
                     self.gene_combo.setCurrentIndex(idx)
+                    found = True
                     break
+            if not found:
+                self.gene_combo.setCurrentText(p_data["gene"])
             if self.gene_combo.lineEdit():
                 self.gene_combo.lineEdit().setCursorPosition(0)
             self.taxa_edit.setPlainText(p_data["taxa"])
@@ -702,6 +722,32 @@ class NCBIGeneTab(QWidget):
         if not targets:
             QMessageBox.warning(self, "輸入無效", "未解析到有效登錄號或已知物種名稱！請檢查輸入內容。")
             return
+
+        # Smart Pre-flight Guard: Detect non-coding RNA Accessions vs Protein-coding Target Gene
+        is_all_rna_accs = bool(targets) and all(acc.upper().startswith("NR_") for acc in targets)
+        is_rna_target = any(r in target_gene.upper() for r in ("16S", "18S", "SSU", "28S", "RRNA", "ITS", "RNA"))
+        if is_all_rna_accs and not is_rna_target:
+            reply = QMessageBox.question(
+                self,
+                "⚠️ 標的基因與登錄號型態不符",
+                f"偵測到您輸入的登錄號全部為【NCBI 非編碼 RNA 專用登錄號 (NR_...)】，\n"
+                f"但目前設定的標的基因為【{target_gene}】(蛋白質編碼基因)。\n\n"
+                f"這通常是因未切換基因選單所致，會導致特徵表中找不到 CDS 特徵而擷取失敗。\n\n"
+                f"是否自動將標的基因切換為「SSU / 16S / 18S 核糖體 RNA」並繼續執行？",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes
+            )
+            if reply == QMessageBox.Yes:
+                target_gene = "SSU"
+                for idx in range(self.gene_combo.count()):
+                    item_u = self.gene_combo.itemText(idx).upper()
+                    if "SSU" in item_u or ("16S" in item_u and "18S" in item_u):
+                        self.gene_combo.setCurrentIndex(idx)
+                        break
+                else:
+                    self.gene_combo.setCurrentText("SSU / 16S / 18S 核糖體 RNA")
+            else:
+                return
 
         out_path = Path(self.out_path_edit.text().strip())
         self.fetch_btn.setEnabled(False)
