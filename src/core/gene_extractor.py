@@ -42,6 +42,7 @@ class ExtractedGeneRecord:
     md5_hash: str = ""
     coordinates_str: str = ""
     retrieved_at: str = ""
+    qc_status: str = ""
 
 
 @dataclass
@@ -56,6 +57,7 @@ class GeneExtractionResult:
     output_md: str = ""
     failed_accessions: list[tuple[str, str]] = field(default_factory=list)  # (acc_or_org, reason)
     message: str = ""
+    qc_warnings: list[str] = field(default_factory=list)
 
 
 class GeneExtractor:
@@ -96,31 +98,26 @@ class GeneExtractor:
         "BRCA1": ["BREAST CANCER TYPE 1 SUSCEPTIBILITY PROTEIN"],
         "ETR1": [
             "ETHYLENE RECEPTOR 1",
-            "ETHYLENE RECEPTOR",
-            "ETHYLENE RESPONSE SENSOR 1",
-            "ETHYLENE RESPONSE SENSOR",
-            "ETHYLENE SENSOR",
+            "ETHYLENE RECEPTOR ETR1",
             "HISTIDINE KINASE ETR1",
-            "ERS1",
-            "ETR",
             "ETR1",
-            "ETR2",
             "LEETR1",
             "SLETR1",
-            "OSETR1",
+            "OSETR1"
+        ],
+        "ERS1": [
+            "ETHYLENE RESPONSE SENSOR 1",
+            "ETHYLENE RESPONSE SENSOR",
+            "ERS1"
+        ],
+        "ETR2": [
+            "ETHYLENE RECEPTOR 2",
+            "ETR2",
             "OSETR2"
         ],
-        "ETR": [
-            "ETHYLENE RECEPTOR",
-            "ETHYLENE RESPONSE",
-            "ETHYLENE SENSOR",
-            "ETR1",
-            "ETR2",
-            "ERS1",
-            "ERS2",
-            "EIN4",
-            "LEETR1",
-            "SLETR1"
+        "EIN4": [
+            "ETHYLENE INSENSITIVE 4",
+            "EIN4"
         ],
         "PSBA": ["PHOTOSYSTEM II PROTEIN D1", "PSBA"],
         "PSAA": ["PHOTOSYSTEM I PROTEIN A1", "PSAA"],
@@ -1542,11 +1539,31 @@ class GeneExtractor:
                                 aa_seq = ""
                         f.write(f">{r.header}|AA_len={len(aa_seq)}\n{aa_seq}\n")
 
-        # 2. Save Traceability CSV
+        # 2. Quality Control: Homology & Length Discrepancy Check (Paralog / Domain truncation detection)
+        length_warnings: list[str] = []
+        if len(extracted_records) >= 3:
+            lengths = [r.seq_length for r in extracted_records]
+            lengths.sort()
+            median_len = lengths[len(lengths) // 2]
+            for r in extracted_records:
+                diff_ratio = abs(r.seq_length - median_len) / median_len if median_len > 0 else 0
+                if diff_ratio > 0.15:
+                    status = f"過長 (+{int(diff_ratio*100)}%)" if r.seq_length > median_len else f"過短 (-{int(diff_ratio*100)}%)"
+                    r.qc_status = f"⚠️ 疑似長度離群 ({status})"
+                    length_warnings.append(
+                        f"⚠️ {r.organism} ({r.seq_length} bp vs 中位數 {median_len} bp, {status}): 疑似混入旁系同源基因 (Paralog)、非同源前導序列或結構域缺失！"
+                    )
+                else:
+                    r.qc_status = "正常 (Passed)"
+        elif extracted_records:
+            for r in extracted_records:
+                r.qc_status = "正常 (Passed)"
+
+        # 3. Save Traceability CSV
         csv_path = output_p.with_suffix(".provenance.csv")
         self.export_provenance_csv(extracted_records, csv_path)
 
-        # 3. Save Traceability Markdown
+        # 4. Save Traceability Markdown
         md_path = output_p.with_suffix(".provenance.md")
         self.export_provenance_markdown(extracted_records, md_path, target_gene)
 
@@ -1554,6 +1571,8 @@ class GeneExtractor:
         msg = f"成功擷取 {len(extracted_records)}/{total} 筆特定基因序列 ({target_gene})。"
         if failed:
             msg += f" {len(failed)} 筆未擷取成功。"
+        if length_warnings:
+            msg += f"\n⚠️ [演化品管警示] 發現 {len(length_warnings)} 筆序列長度與中位數偏差 >15%，疑似混入旁系同源基因 (Paralog) 或缺失結構域，請檢查審計報告或使用 trimAl 修剪。"
 
         return GeneExtractionResult(
             success=success,
@@ -1566,6 +1585,7 @@ class GeneExtractor:
             output_md=str(md_path) if success else "",
             failed_accessions=failed,
             message=msg,
+            qc_warnings=length_warnings,
         )
 
     @classmethod
@@ -1581,6 +1601,7 @@ class GeneExtractor:
                 "股向 (Strand)",
                 "核酸長度 (bp)",
                 "蛋白質長度 (aa)",
+                "品管狀態 (QC Status)",
                 "蛋白質 ID (Protein ID)",
                 "TaxID",
                 "SHA-256 數位指紋 (Checksum)",
@@ -1597,6 +1618,7 @@ class GeneExtractor:
                     "+" if r.strand == 1 else "-",
                     r.seq_length,
                     r.protein_length,
+                    r.qc_status or "正常 (Passed)",
                     r.protein_id,
                     r.taxid,
                     r.sha256_hash,
@@ -1611,13 +1633,26 @@ class GeneExtractor:
             f"**目標基因標的**：`{target_gene}` ｜ **產出時間**：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ｜ **總筆數**：{len(records)} 筆\n",
             f"> [!IMPORTANT]",
             f"> 本清單記錄每條序列於 NCBI GenBank 官方資料庫中的原始座標、特徵表位置及 SHA-256 數位指紋，任何研究者皆可點擊連結逐一複驗溯源，消除黑箱序列疑慮。\n",
-            f"| 物種學名 | NCBI 登錄號 | 座標範圍 | 核酸 (bp) | 蛋白 (aa) | 蛋白質 ID | SHA-256 數位指紋 (前12碼) | 官方檢驗連結 |",
-            f"| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |"
         ]
+
+        qc_alerts = [r for r in records if "⚠️" in (r.qc_status or "")]
+        if qc_alerts:
+            lines.append("> [!WARNING]")
+            lines.append("> **直系同源長度品管警示 (Orthology & Length Discrepancy QC)**:")
+            lines.append("> 系統檢測到下列序列之長度與群體中位數差異超過 15%，強烈建議檢查是否混入旁系同源基因（如 ETR1 混入 ERS1）或非同源前導序列：")
+            for r in qc_alerts:
+                lines.append(f"> - **{r.organism}** (`{r.accession}`): {r.seq_length} bp — {r.qc_status}")
+            lines.append("")
+
+        lines.extend([
+            f"| 物種學名 | NCBI 登錄號 | 座標範圍 | 核酸 (bp) | 蛋白 (aa) | 品管狀態 | 蛋白質 ID | SHA-256 數位指紋 (前12碼) | 官方檢驗連結 |",
+            f"| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |"
+        ])
         for r in records:
             link_md = f"[{r.accession}]({r.ncbi_url})"
+            qc_badge = r.qc_status if r.qc_status else "正常"
             lines.append(
-                f"| *{r.organism}* | {link_md} | `{r.coordinates_str}` | {r.seq_length} | {r.protein_length or 'N/A'} | `{r.protein_id or 'N/A'}` | `{r.sha256_hash[:12]}...` | [查閱 GenBank]({r.ncbi_url}) |"
+                f"| *{r.organism}* | {link_md} | `{r.coordinates_str}` | {r.seq_length} | {r.protein_length or 'N/A'} | {qc_badge} | `{r.protein_id or 'N/A'}` | `{r.sha256_hash[:12]}...` | [查閱 GenBank]({r.ncbi_url}) |"
             )
         lines.append("\n---\n*Report generated automatically by PhyloCraft Gene Extractor.*")
 

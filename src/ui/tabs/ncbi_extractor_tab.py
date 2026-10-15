@@ -32,7 +32,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
 )
 from PySide6.QtCore import QThread, Signal, Qt, QUrl
-from PySide6.QtGui import QDesktopServices, QColor
+from PySide6.QtGui import QDesktopServices, QColor, QBrush
 from src.core.gene_extractor import GeneExtractor, ExtractedGeneRecord, GeneExtractionResult
 from src.config import DATA_DIR, OUTPUT_DIR
 
@@ -715,12 +715,23 @@ class NCBIGeneTab(QWidget):
             self.btn_send_align.setEnabled(True)
             self.populate_provenance_table(result.records)
             self.log_edit.append(f"\n🎉 成功！已建立全透明可溯源 FASTA: {result.output_fasta}")
+            if result.qc_warnings:
+                self.log_edit.append("\n⚠️ 【直系同源品管警示 (Orthology QC)】:")
+                for w in result.qc_warnings:
+                    self.log_edit.append(f"  • {w}")
+                self.log_edit.append("  💡 演化生物學建議：可點選上方「傳送至修剪 (trimAl)」剔除非同源區段，或改以「轉譯蛋白質」模式進行建樹，以避免分支長度失真。")
+
+            warn_note = ""
+            if result.qc_warnings:
+                warn_note = f"\n\n⚠️ 【直系同源長度警示】：\n偵測到 {len(result.qc_warnings)} 筆序列長度與中位數偏差 >15%！疑似混入旁系同源基因 (如 ETR1 混入 ERS1) 或未修剪前導區。\n建議檢查檢驗表或使用 trimAl 修剪。"
+
             QMessageBox.information(
                 self,
                 "擷取成功",
                 f"成功從 NCBI 特徵表擷取 {result.total_extracted} 筆特定基因序列 ({result.records[0].gene_symbol})！\n\n"
                 f"• FASTA 檔案：{result.output_fasta}\n"
-                f"• 溯源審計表：{result.output_csv}\n\n"
+                f"• 溯源審計表：{result.output_csv}"
+                f"{warn_note}\n\n"
                 f"所有序列皆已建立 NCBI 官方檢驗連結與 SHA-256 數位指紋，保證 100% 可溯源！"
             )
         else:
@@ -748,8 +759,13 @@ class NCBIGeneTab(QWidget):
                 len_str = f"{r.seq_length} bp ({r.protein_length} aa)"
             else:
                 len_str = f"{r.seq_length} bp"
+            if "⚠️" in (r.qc_status or ""):
+                len_str = f"⚠️ {len_str}"
             item_len = QTableWidgetItem(len_str)
             item_len.setTextAlignment(Qt.AlignCenter)
+            if "⚠️" in (r.qc_status or ""):
+                item_len.setToolTip(f"演化品管警示: {r.qc_status}\n序列長度與中位數偏差過大，可能為旁系同源基因 (Paralog) 或缺失/多出結構域。")
+                item_len.setForeground(QColor("#B45309"))
             self.table.setItem(row, 3, item_len)
 
             # 4: Protein ID
