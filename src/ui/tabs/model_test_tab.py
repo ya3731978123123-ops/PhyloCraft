@@ -419,29 +419,53 @@ class ModelTestTab(QWidget):
         if hasattr(self, "btn_toggle_ctrl"):
             self.btn_toggle_ctrl.setText("展開參數列 ▼" if self.is_ctrl_collapsed else "收合參數列 ▲")
 
-    def set_input_file(self, file_path: str, iqtree_path: str | Path | None = None):
+    def reset_results_display(self):
+        """Resets the result banner, candidate table, and stats to clean unrun state."""
+        self.current_result = None
+        self.best_model_label.setText("最優替代模型: 等待檢定...")
+        self.stats_label.setText("物種數: - | 位點長度: - | 簡約訊息位點: - | BIC 分數: -")
+        self.freq_label.setText("鹼基組成: 等待分析...")
+        self.apply_btn.setEnabled(False)
+        self.table.setRowCount(0)
+
+    def set_input_file(self, file_path: str, iqtree_path: str | Path | None = None, auto_load_report: bool = False):
         self.in_edit.setText(file_path)
         if iqtree_path and Path(iqtree_path).exists():
             if self.load_existing_report(iqtree_path):
                 return
 
+        # If user explicitly requested auto_load_report (e.g. from history viewer)
+        if auto_load_report:
+            p = Path(file_path)
+            base = p.stem.replace("_trimmed", "").replace("_aligned", "").replace("_cleaned", "")
+            candidates = [
+                p.parent / f"{p.stem}_modelfinder.iqtree",
+                OUTPUT_DIR / f"{p.stem}_modelfinder.iqtree",
+                p.with_suffix(".iqtree"),
+            ]
+            for cand in candidates:
+                if cand.exists():
+                    if self.load_existing_report(cand):
+                        return
+
+        # Normal workflow: clean ready state waiting for user to click "開始模型檢定"
+        self.reset_results_display()
         p = Path(file_path)
-        base = p.stem.replace("_trimmed", "").replace("_aligned", "").replace("_cleaned", "")
-        candidates = [
+        self.log_viewer.clear()
+        self.log_viewer.append_log(f"已就緒輸入比對序列: {p.name}")
+        self.log_viewer.append_log("👉 請確認「模型範圍」與「評選標準」，點擊下方「開始模型檢定 (Run ModelFinder)」按鈕啟動分析。")
+        
+        # Check if an existing report exists on disk to inform the user politely without auto-forcing
+        cand_existing = None
+        for cand in [
             p.parent / f"{p.stem}_modelfinder.iqtree",
-            p.parent / f"{base}_modelfinder.iqtree",
             OUTPUT_DIR / f"{p.stem}_modelfinder.iqtree",
-            OUTPUT_DIR / f"{base}_modelfinder.iqtree",
-            p.parent / f"{p.stem}_tree.iqtree",
-            p.parent / f"{base}_tree.iqtree",
-            OUTPUT_DIR / f"{p.stem}_tree.iqtree",
-            OUTPUT_DIR / f"{base}_tree.iqtree",
-            p.with_suffix(".iqtree"),
-        ]
-        for cand in candidates:
+        ]:
             if cand.exists():
-                if self.load_existing_report(cand):
-                    break
+                cand_existing = cand
+                break
+        if cand_existing:
+            self.log_viewer.append_log(f"💡 備註：偵測到此檔案先前曾有檢定紀錄 ({cand_existing.name})。若無需重新運算，可點選上方「載入既有 .iqtree 報告...」直接查看。")
 
     def browse_existing_report(self):
         fp, _ = QFileDialog.getOpenFileName(
