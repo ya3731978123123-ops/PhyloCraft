@@ -59,6 +59,7 @@ class TrimmingTab(QWidget):
 
     view_msa_requested = Signal(str)
     test_model_requested = Signal(str)
+    send_to_tree_requested = Signal(str)
 
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
@@ -242,6 +243,14 @@ class TrimmingTab(QWidget):
         self.to_model_btn.clicked.connect(self.open_model_test)
         btn_row.addWidget(self.to_model_btn, 2)
 
+        self.to_tree_btn = QPushButton("🌳 直接前往建樹 (IQ-TREE) ➔")
+        self.to_tree_btn.setObjectName("success_button")
+        self.to_tree_btn.setFixedHeight(34)
+        self.to_tree_btn.setEnabled(False)
+        self.to_tree_btn.setToolTip("直接將修剪後的高品質序列送往 IQ-TREE 2 推論演化樹（預設啟用 MFP 自動模型評選）")
+        self.to_tree_btn.clicked.connect(self.open_tree_tab)
+        btn_row.addWidget(self.to_tree_btn, 2)
+
         ab_layout.addLayout(btn_row)
 
         # Dynamic Result Banner
@@ -249,7 +258,7 @@ class TrimmingTab(QWidget):
         self.result_banner.setStyleSheet("background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 4px 8px;")
         rb_layout = QHBoxLayout(self.result_banner)
         rb_layout.setContentsMargins(4, 2, 4, 2)
-        self.result_label = QLabel("✓ 位點修剪已完成！可點擊上方按鈕直接檢視比對或前往模型檢定。")
+        self.result_label = QLabel("✓ 位點修剪已完成！可點擊上方按鈕直接檢視比對、進行模型檢定或直接開始建樹。")
         self.result_label.setStyleSheet("color: #0F766E; font-size: 11px; font-weight: bold;")
         rb_layout.addWidget(self.result_label)
         self.result_banner.setVisible(False)
@@ -324,13 +333,14 @@ class TrimmingTab(QWidget):
             self.last_trimmed_file = self.out_edit.text().strip()
             self.view_msa_btn.setEnabled(True)
             self.to_model_btn.setEnabled(True)
+            self.to_tree_btn.setEnabled(True)
             if hasattr(self, "result_banner"):
                 self.result_banner.setVisible(True)
                 self.result_label.setText(
-                    f"✓ 位點修剪成功！已生成：{Path(self.last_trimmed_file).name} ｜ 可直接於上方點擊「檢視比對」或「前往模型檢定」進行下一步。"
+                    f"✓ 位點修剪成功！已生成：{Path(self.last_trimmed_file).name} ｜ 可點擊上方按鈕「檢視比對」、「模型檢定」或「直接前往建樹」。"
                 )
             QMessageBox.information(
-                self, "修剪完成", f"比對修剪順利完成！\n已儲存至: {Path(self.last_trimmed_file).name}\n可點選「檢視比對」或「模型檢定」進行下一步。"
+                self, "修剪完成", f"比對修剪順利完成！\n已儲存至: {Path(self.last_trimmed_file).name}\n可點選「檢視比對」、「模型檢定」或「直接前往建樹」。"
             )
         else:
             if hasattr(self, "result_banner"):
@@ -344,3 +354,7 @@ class TrimmingTab(QWidget):
     def open_model_test(self):
         if self.last_trimmed_file and Path(self.last_trimmed_file).exists():
             self.test_model_requested.emit(self.last_trimmed_file)
+
+    def open_tree_tab(self):
+        if self.last_trimmed_file and Path(self.last_trimmed_file).exists():
+            self.send_to_tree_requested.emit(self.last_trimmed_file)

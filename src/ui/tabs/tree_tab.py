@@ -99,15 +99,40 @@ class TreeTab(QWidget):
         layout.setSpacing(10)
 
         # Form Scroll Area (Protects all inputs from squishing on small/scaled screens)
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.NoFrame)
-        scroll.setStyleSheet("background: transparent;")
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFrameShape(QFrame.NoFrame)
+        self.scroll.setStyleSheet("background: transparent;")
 
         form_container = QWidget()
         form_layout = QVBoxLayout(form_container)
         form_layout.setContentsMargins(0, 0, 0, 0)
         form_layout.setSpacing(10)
+
+        # 0. Pipeline Breadcrumb Header (Clear Cross-Step Flow)
+        pipeline_strip = QFrame()
+        pipeline_strip.setStyleSheet("""
+            QFrame {
+                background-color: #F1F5F9;
+                border: 1px solid #CBD5E1;
+                border-radius: 6px;
+                padding: 5px 12px;
+            }
+        """)
+        ps_layout = QHBoxLayout(pipeline_strip)
+        ps_layout.setContentsMargins(2, 2, 2, 2)
+        ps_lbl = QLabel(
+            "<span style='color:#64748B;'>① 序列清洗</span> ➔ "
+            "<span style='color:#64748B;'>② 多序列比對 (MAFFT)</span> ➔ "
+            "<span style='color:#64748B;'>③ 比對位點修剪 (trimAl)</span> ➔ "
+            "<span style='color:#64748B;'>④ 模型評選</span> ➔ "
+            "<span style='color:#0F766E; font-weight:bold; background-color:#CCFBF1; padding:3px 8px; border-radius:4px; border:1px solid #99F6E4;'>⑤ 系統發育建樹 (當前)</span> ➔ "
+            "<span style='color:#64748B;'>⑥ 演化樹檢視</span>"
+        )
+        ps_lbl.setStyleSheet("font-size: 11px;")
+        ps_layout.addWidget(ps_lbl)
+        ps_layout.addStretch()
+        form_layout.addWidget(pipeline_strip)
 
         # 1. Header Box (Modern Studio Header)
         header_box = QFrame()
@@ -143,6 +168,26 @@ class TreeTab(QWidget):
         )
         h_layout.addWidget(info_btn)
         form_layout.addWidget(header_box)
+
+        # 1.1 Dynamic Guidance & Source Banner (明確跨步驟引導)
+        self.source_banner = QFrame()
+        self.source_banner.setStyleSheet("""
+            QFrame {
+                background-color: #EFF6FF;
+                border: 1px solid #BFDBFE;
+                border-radius: 6px;
+                padding: 8px 12px;
+            }
+        """)
+        sb_layout = QHBoxLayout(self.source_banner)
+        sb_layout.setContentsMargins(6, 4, 6, 4)
+        self.source_label = QLabel(
+            "<b>💡 步驟指引：</b>若您已於前置步驟（如 trimAl 修剪或模型評選）完成分析，序列檔案與最適模型會自動於此載入；"
+            "您只需確認下方參數後，直接點擊<b>「▶ 開始構建演化樹」</b>即可一鍵推論！"
+        )
+        self.source_label.setStyleSheet("color: #1E40AF; font-size: 11px;")
+        sb_layout.addWidget(self.source_label)
+        form_layout.addWidget(self.source_banner)
 
         # 2. File setup (Clean Grid Layout)
         file_box = QGroupBox("步驟 1：比對序列與分區設定 (Files & Partitions)")
@@ -329,7 +374,7 @@ class TreeTab(QWidget):
         dow_grid.addWidget(param_widget, 1, 1, 1, 3)
 
         d_layout.addWidget(self.dating_opts_widget)
-        self.dating_opts_widget.setEnabled(False)  # Disabled until checked
+        self.dating_opts_widget.setVisible(False)  # Collapsed by default to maximize visible canvas space
         form_layout.addWidget(dating_box)
 
         # 5. Step 4: Execution Actions & Next Steps
@@ -339,26 +384,27 @@ class TreeTab(QWidget):
         ab_layout.setSpacing(8)
 
         btn_row = QHBoxLayout()
-        btn_row.setSpacing(8)
+        btn_row.setSpacing(10)
         self.run_btn = QPushButton("▶ 開始構建演化樹 (Run IQ-TREE)")
         self.run_btn.setObjectName("primary_button")
-        self.run_btn.setFixedHeight(34)
+        self.run_btn.setFixedHeight(36)
         self.run_btn.setMinimumWidth(180)
         self.run_btn.clicked.connect(self.start_iqtree)
         btn_row.addWidget(self.run_btn, 3)
 
         self.cancel_btn = QPushButton("■ 停止 (Stop)")
         self.cancel_btn.setObjectName("danger_button")
-        self.cancel_btn.setFixedHeight(34)
-        self.cancel_btn.setMinimumWidth(80)
+        self.cancel_btn.setFixedHeight(36)
+        self.cancel_btn.setMinimumWidth(85)
         self.cancel_btn.setEnabled(False)
         self.cancel_btn.clicked.connect(self.cancel_iqtree)
         btn_row.addWidget(self.cancel_btn, 1)
 
         self.view_btn = QPushButton("🌲 檢視演化樹 (View Tree) ➔")
-        self.view_btn.setFixedHeight(34)
+        self.view_btn.setObjectName("success_button")
+        self.view_btn.setFixedHeight(36)
         self.view_btn.setEnabled(False)
-        self.view_btn.setToolTip("直接於 PhyloCraft 演化樹製圖工坊中進行定根、高解析度美化與匯出")
+        self.view_btn.setToolTip("建樹完成後，點擊可直接於演化樹製圖工坊中進行定根、支持度數值著色與發表級圖檔匯出")
         self.view_btn.clicked.connect(self.open_tree_viewer)
         btn_row.addWidget(self.view_btn, 2)
 
@@ -366,11 +412,11 @@ class TreeTab(QWidget):
 
         # Dynamic Result Banner
         self.result_banner = QFrame()
-        self.result_banner.setStyleSheet("background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 4px 8px;")
+        self.result_banner.setStyleSheet("background-color: #ECFDF5; border: 1px solid #6EE7B7; border-radius: 6px; padding: 8px 12px;")
         rb_layout = QHBoxLayout(self.result_banner)
         rb_layout.setContentsMargins(4, 2, 4, 2)
-        self.result_label = QLabel("✓ 系統發育建樹已完成！可點擊上方按鈕直接於演化樹製圖工坊開啟。")
-        self.result_label.setStyleSheet("color: #0F766E; font-size: 11px; font-weight: bold;")
+        self.result_label = QLabel("✓ 系統發育建樹已完成！可點擊上方綠色按鈕直接於演化樹製圖工坊開啟。")
+        self.result_label.setStyleSheet("color: #065F46; font-size: 11px; font-weight: bold;")
         rb_layout.addWidget(self.result_label)
         self.result_banner.setVisible(False)
         ab_layout.addWidget(self.result_banner)
@@ -378,7 +424,7 @@ class TreeTab(QWidget):
         form_layout.addWidget(action_box)
         form_layout.addStretch()
 
-        scroll.setWidget(form_container)
+        self.scroll.setWidget(form_container)
 
         # Splitter hosting Form Scroll Area + Collapsible Log Viewer
         splitter = QSplitter(Qt.Vertical)
@@ -396,7 +442,7 @@ class TreeTab(QWidget):
                 background-color: #008287;
             }
         """)
-        splitter.addWidget(scroll)
+        splitter.addWidget(self.scroll)
 
         self.log_viewer = LogViewer("IQ-TREE 即時日誌 (Console Output)")
         splitter.addWidget(self.log_viewer)
@@ -406,7 +452,7 @@ class TreeTab(QWidget):
         layout.addWidget(splitter, 1)
 
     def on_dating_toggled(self, checked: bool):
-        self.dating_opts_widget.setEnabled(checked)
+        self.dating_opts_widget.setVisible(checked)
 
     def browse_date_file(self):
         fp, _ = QFileDialog.getOpenFileName(
@@ -465,7 +511,30 @@ class TreeTab(QWidget):
             f"可直接以記事本打開該檔案並依照註解添加 mrca(A, B) 年代區間。",
         )
 
-    def set_model_and_input(self, model: str, input_file: str = ""):
+    def set_input_file(self, file_path: str, source: str = "trimAl 比對修剪"):
+        if not file_path:
+            return
+        self.in_edit.setText(file_path)
+        p = Path(file_path)
+        self.out_edit.setText(str(p.parent / f"{p.stem}_tree"))
+        if hasattr(self, "source_banner") and hasattr(self, "source_label"):
+            self.source_banner.setStyleSheet("""
+                QFrame {
+                    background-color: #ECFDF5;
+                    border: 1px solid #6EE7B7;
+                    border-radius: 6px;
+                    padding: 8px 12px;
+                }
+            """)
+            self.source_label.setText(
+                f"<b>✓ 已自動從【{source}】載入比對序列：</b><code style='color:#065F46; font-weight:bold;'>{p.name}</code><br>"
+                f"<span style='color:#047857;'>👉 系統預設採用 <b>MFP (ModelFinder Plus)</b> 自動評選最佳模型！請確認下方參數後，直接點擊<b>「▶ 開始構建演化樹」</b>即可！</span>"
+            )
+            self.source_label.setStyleSheet("color: #065F46; font-size: 11px;")
+        if hasattr(self, "scroll") and self.scroll:
+            self.scroll.verticalScrollBar().setValue(0)
+
+    def set_model_and_input(self, model: str, input_file: str = "", source: str = "模型評選 (ModelFinder)"):
         if input_file:
             self.in_edit.setText(input_file)
             p = Path(input_file)
@@ -482,6 +551,26 @@ class TreeTab(QWidget):
             else:
                 self.model_combo.insertItem(0, f"{model} (⭐ ModelFinder 推薦模型)")
                 self.model_combo.setCurrentIndex(0)
+
+        if hasattr(self, "source_banner") and hasattr(self, "source_label"):
+            p_name = Path(input_file).name if input_file else "已就緒"
+            self.source_banner.setStyleSheet("""
+                QFrame {
+                    background-color: #ECFDF5;
+                    border: 1px solid #6EE7B7;
+                    border-radius: 6px;
+                    padding: 8px 12px;
+                }
+            """)
+            self.source_label.setText(
+                f"<b>✓ 已成功從【{source}】載入序列並套用最優替代模型！</b><br>"
+                f"• 序列檔案：<code style='color:#065F46; font-weight:bold;'>{p_name}</code> ｜ "
+                f"• 最適模型：<code style='color:#065F46; font-weight:bold;'>{model}</code><br>"
+                f"<span style='color:#047857;'>👉 最佳模型已就緒！請直接點擊下方<b>「▶ 開始構建演化樹 (Run IQ-TREE)」</b>即可開始進行最大概似法推論。</span>"
+            )
+            self.source_label.setStyleSheet("color: #065F46; font-size: 11px;")
+        if hasattr(self, "scroll") and self.scroll:
+            self.scroll.verticalScrollBar().setValue(0)
 
     def browse_input(self):
         fp, _ = QFileDialog.getOpenFileName(
@@ -545,8 +634,11 @@ class TreeTab(QWidget):
             return
 
         self.run_btn.setEnabled(False)
+        self.run_btn.setText("⏳ 正在推論演化樹中... (Computing IQ-TREE)")
         self.cancel_btn.setEnabled(True)
         self.view_btn.setEnabled(False)
+        if hasattr(self, "result_banner"):
+            self.result_banner.setVisible(False)
         self.log_viewer.clear_log()
 
         self.worker = IQTreeWorker(
@@ -570,9 +662,12 @@ class TreeTab(QWidget):
         if self.worker and self.worker.isRunning():
             self.worker.cancel()
             self.cancel_btn.setEnabled(False)
+            self.run_btn.setText("▶ 開始構建演化樹 (Run IQ-TREE)")
+            self.run_btn.setEnabled(True)
 
     def on_finished(self, res: IQTreeResult):
         self.run_btn.setEnabled(True)
+        self.run_btn.setText("▶ 重新構建演化樹 (Run IQ-TREE)")
         self.cancel_btn.setEnabled(False)
         if res.success:
             self.last_tree_file = res.timetree_file if res.timetree_file else res.tree_file
@@ -581,11 +676,11 @@ class TreeTab(QWidget):
             if hasattr(self, "result_banner"):
                 self.result_banner.setVisible(True)
                 self.result_label.setText(
-                    f"✓ 演化樹構建成功！產出：{Path(self.last_tree_file).name} ｜ 可點選上方按鈕直接於演化樹製圖工坊開啟。"
+                    f"✓ 演化樹構建成功！產出：{Path(self.last_tree_file).name} ｜ 可直接點選上方綠色按鈕前往「演化樹檢視與製圖」。"
                 )
 
             if res.timetree_file:
-                self.view_btn.setText("檢視分子鐘時間樹 (View TimeTree) ➔")
+                self.view_btn.setText("🌲 立即檢視分子鐘時間樹 (View TimeTree) ➔")
                 QMessageBox.information(
                     self,
                     "分子鐘定年與建樹成功",
@@ -594,19 +689,20 @@ class TreeTab(QWidget):
                     f"• 最佳替代模型: {res.best_model or '已寫入報告'}\n"
                     f"• 推算分子演化速率: {res.rate_estimate or '請見 LSD 報告'} subst/site\n"
                     f"• 根節點年齡 (tMRCA): {res.tmrca_estimate or '推算完成'}\n\n"
-                    f"可點選下方「檢視分子鐘時間樹」直接繪製帶有時間刻度的論文圖表！",
+                    f"可點選上方「🌲 立即檢視分子鐘時間樹」直接繪製帶有時間刻度的論文圖表！",
                 )
             else:
-                self.view_btn.setText("🌲 檢視演化樹 (View Tree) ➔")
+                self.view_btn.setText("🌲 立即檢視演化樹 (View Tree) ➔")
                 QMessageBox.information(
                     self,
                     "建樹完成",
                     f"IQ-TREE 2 建樹完成。\n\n"
                     f"• 演化樹檔案: {Path(res.tree_file).name}\n"
                     f"• 最佳模型: {res.best_model or '已寫入報告檔'}\n\n"
-                    f"可點選下方「檢視演化樹」進行定根與繪圖。",
+                    f"可點選上方「🌲 立即檢視演化樹」進行定根、支持度著色與發表級製圖！",
                 )
         else:
+            self.run_btn.setText("▶ 開始構建演化樹 (Run IQ-TREE)")
             if hasattr(self, "result_banner"):
                 self.result_banner.setVisible(False)
             QMessageBox.critical(self, "建樹錯誤", f"IQ-TREE 2 執行失敗:\n{res.message}")

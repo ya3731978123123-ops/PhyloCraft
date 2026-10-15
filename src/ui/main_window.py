@@ -402,6 +402,7 @@ class MainWindow(QMainWindow):
         self.alignment_tab.trim_requested.connect(self.switch_to_trimming)
         self.trimming_tab.view_msa_requested.connect(self.switch_to_msa_viewer)
         self.trimming_tab.test_model_requested.connect(self.switch_to_model_test)
+        self.trimming_tab.send_to_tree_requested.connect(self.switch_to_tree_from_trimming)
         self.model_test_tab.apply_model_requested.connect(self.switch_to_tree_tab)
         self.tree_tab.view_tree_requested.connect(self.switch_to_tree_viewer)
         self.concat_tab.send_to_tree_requested.connect(self.switch_to_tree_from_concat)
@@ -555,7 +556,7 @@ class MainWindow(QMainWindow):
 
     def switch_to_sanitizer(self, fasta_path: str):
         self.sanitizer_tab.file_edit.setText(fasta_path)
-        self.sanitizer_tab.analyze_file()
+        self.sanitizer_tab.analyze_file(show_dialog=False)
         self.nav_list.setCurrentRow(2)  # Sanitizer tab index
         self.status_bar.showMessage(f"已載入序列至品質檢驗與清洗: {Path(fasta_path).name}", 4000)
 
@@ -590,12 +591,12 @@ class MainWindow(QMainWindow):
         p = Path(file_path)
         if step_key == "raw":
             self.sanitizer_tab.file_edit.setText(file_path)
-            self.sanitizer_tab.analyze_file()
+            self.sanitizer_tab.analyze_file(show_dialog=False)
             self.msa_tab.load_alignment(file_path)
             self.status_bar.showMessage(f"已載入原始序列: {p.name}", 4000)
         elif step_key == "sanitize":
             self.sanitizer_tab.file_edit.setText(file_path)
-            self.sanitizer_tab.analyze_file()
+            self.sanitizer_tab.analyze_file(show_dialog=False)
             self.status_bar.showMessage(f"已就緒序列品管清洗: {p.name}", 4000)
         elif step_key == "alignment":
             self.alignment_tab.in_edit.setText(file_path)
@@ -645,12 +646,17 @@ class MainWindow(QMainWindow):
                     self.tree_viewer_tab.tree_canvas.time_scale_cb.setChecked(True)
 
     def switch_to_tree_tab(self, model: str, file_path: str):
-        self.tree_tab.set_model_and_input(model, file_path)
+        self.tree_tab.set_model_and_input(model, file_path, source="模型評選 (ModelFinder)")
         self.nav_list.setCurrentRow(7)  # Tree tab index
         self.status_bar.showMessage(f"已套用最佳模型 {model} 並跳轉至建樹分頁", 5000)
 
+    def switch_to_tree_from_trimming(self, file_path: str):
+        self.tree_tab.set_input_file(file_path, source="trimAl 比對修剪")
+        self.nav_list.setCurrentRow(7)  # Tree tab index
+        self.status_bar.showMessage("已將修剪後序列傳送至建樹分頁，預設啟用 MFP 最佳模型評選", 5000)
+
     def switch_to_tree_from_concat(self, fasta_path: str, partition_path: str):
-        self.tree_tab.in_edit.setText(fasta_path)
+        self.tree_tab.set_input_file(fasta_path, source="多基因超矩陣串聯 (Concatenate)")
         self.tree_tab.part_edit.setText(partition_path)
         p = Path(fasta_path)
         self.tree_tab.out_edit.setText(str(p.parent / f"{p.stem}_partition_tree"))

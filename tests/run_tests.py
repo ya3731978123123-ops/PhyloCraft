@@ -33,10 +33,10 @@ GUI_TESTS = [
     "test_gui_smoke.py",
     "test_interactive_ui.py",
     "test_interactive_gene_dialog.py",
+    "test_ncbi_gene_tab.py",
 ]
 
 BENCHMARK_TESTS = [
-    "test_ncbi_gene_tab.py",
     "test_full_taxa_benchmarks.py",
     "test_master_system_audit.py",
     "test_multi_paper_replication.py",

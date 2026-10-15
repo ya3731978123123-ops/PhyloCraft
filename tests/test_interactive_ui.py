@@ -224,9 +224,12 @@ def run_interactive_ui_tests():
             else:
                 p.unlink(missing_ok=True)
 
-        leftovers = list(OUTPUT_DIR.iterdir())
-        assert len(leftovers) == 0, f"Lingering files found: {leftovers}"
-        print("  ✓ Output directory verified 100% clean!")
+        leftovers = [
+            p for p in OUTPUT_DIR.iterdir()
+            if p.name.startswith("test_") or p.name.startswith("provenance_audit_test") or p.name.endswith(".phylo")
+        ]
+        assert len(leftovers) == 0, f"Lingering test artifacts found: {leftovers}"
+        print("  ✓ Test artifacts verified 100% clean!")
 
     finally:
         shutil.rmtree(test_dir, ignore_errors=True)

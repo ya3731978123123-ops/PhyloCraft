@@ -151,9 +151,36 @@ QPushButton#primary_button:pressed {
 }
 
 QPushButton#primary_button:disabled {
-    background-color: #CBD5E1;
-    border-color: #94A3B8;
+    background-color: #E2E8F0;
+    border-color: #CBD5E1;
+    color: #64748B;
+    font-weight: 600;
+}
+
+/* Success / Next-Step Action Buttons (Emerald Green) */
+QPushButton#success_button {
+    background-color: #059669;
     color: #FFFFFF;
+    font-weight: bold;
+    border: 1px solid #047857;
+    border-radius: 4px;
+    padding: 6px 16px;
+}
+
+QPushButton#success_button:hover {
+    background-color: #047857;
+    border-color: #065F46;
+    color: #FFFFFF;
+}
+
+QPushButton#success_button:pressed {
+    background-color: #065F46;
+}
+
+QPushButton#success_button:disabled {
+    background-color: #F8FAFC;
+    border-color: #E2E8F0;
+    color: #94A3B8;
 }
 
 /* Danger / Stop Buttons */
@@ -176,7 +203,7 @@ QPushButton#danger_button:pressed {
 }
 
 QPushButton#danger_button:disabled {
-    background-color: #F1F5F9;
+    background-color: #F8FAFC;
     border-color: #E2E8F0;
     color: #94A3B8;
 }
