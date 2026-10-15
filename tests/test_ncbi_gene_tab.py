@@ -198,9 +198,10 @@ def test_ncbi_gene_tab():
 
     main_win.close()
     tab.close()
-    del main_win
-    del tab
+    main_win.deleteLater()
+    tab.deleteLater()
     app.processEvents()
+    app.sendPostedEvents()
 
     # Clean up output artifacts to ensure pristine environment
     shutil.rmtree(out_dir, ignore_errors=True)
@@ -208,8 +209,6 @@ def test_ncbi_gene_tab():
     print("\n" + "=" * 65)
     print("🎉 ALL NCBI GENE TAB & PROVENANCE AUDIT TESTS PASSED 100%!")
     print("=" * 65)
-    app.quit()
-    sys.exit(0)
 
 if __name__ == "__main__":
     test_ncbi_gene_tab()

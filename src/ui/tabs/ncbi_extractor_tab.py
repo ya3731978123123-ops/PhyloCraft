@@ -297,7 +297,6 @@ class NCBIGeneTab(QWidget):
         gene_row = QHBoxLayout()
         gene_row.setSpacing(6)
         gene_lbl = QLabel("<b>1. 目標基因:</b>")
-        gene_lbl.setFixedWidth(82)
         gene_row.addWidget(gene_lbl)
 
         self.gene_combo = QComboBox()
@@ -435,8 +434,8 @@ class NCBIGeneTab(QWidget):
         q_layout.addWidget(self.query_preview_edit, 1)
 
         self.btn_open_ncbi_web = QPushButton("🌐 官網開啟")
-        self.btn_open_ncbi_web.setFixedHeight(22)
-        self.btn_open_ncbi_web.setFixedWidth(78)
+        self.btn_open_ncbi_web.setFixedHeight(24)
+        self.btn_open_ncbi_web.setStyleSheet("padding: 2px 8px; font-size: 11px;")
         self.btn_open_ncbi_web.setEnabled(False)
         self.btn_open_ncbi_web.setToolTip("點擊可直接於預設瀏覽器打開 NCBI 官方 Nuccore 搜尋結果，完全消除黑箱疑慮！")
         self.btn_open_ncbi_web.clicked.connect(self.open_ncbi_in_browser)
@@ -448,7 +447,6 @@ class NCBIGeneTab(QWidget):
         out_row = QHBoxLayout()
         out_row.setSpacing(6)
         out_lbl = QLabel("<b>導出 FASTA:</b>")
-        out_lbl.setFixedWidth(82)
         out_row.addWidget(out_lbl)
 
         self.out_path_edit = QLineEdit(str(DATA_DIR / "extracted_target_genes.fasta"))
@@ -458,8 +456,8 @@ class NCBIGeneTab(QWidget):
         out_row.addWidget(self.out_path_edit, 1)
 
         browse_btn = QPushButton("瀏覽...")
-        browse_btn.setFixedWidth(60)
         browse_btn.setFixedHeight(24)
+        browse_btn.setStyleSheet("padding: 2px 10px; font-size: 11px;")
         browse_btn.clicked.connect(self.browse_output)
         out_row.addWidget(browse_btn)
         l_vbox.addLayout(out_row)
@@ -491,7 +489,6 @@ class NCBIGeneTab(QWidget):
         self.cancel_btn = QPushButton("⏹ 停止")
         self.cancel_btn.setObjectName("danger_button")
         self.cancel_btn.setFixedHeight(34)
-        self.cancel_btn.setFixedWidth(65)
         self.cancel_btn.setEnabled(False)
         self.cancel_btn.setStyleSheet("""
             QPushButton#danger_button {
@@ -500,11 +497,13 @@ class NCBIGeneTab(QWidget):
                 font-weight: bold;
                 border: 1px solid #DC2626;
                 border-radius: 4px;
+                padding: 4px 12px;
             }
             QPushButton#danger_button:disabled {
                 background-color: #F8FAFC;
                 border: 1px solid #E2E8F0;
                 color: #94A3B8;
+                padding: 4px 12px;
             }
         """)
         self.cancel_btn.clicked.connect(self.cancel_extraction)
