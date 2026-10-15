@@ -303,57 +303,19 @@ class TreeCanvasWidget(QWidget):
         ax.axis("off")
         self.canvas.draw()
 
-    KNOWN_BIOLOGICAL_OUTGROUPS = [
-        # Basal Angiosperms (ANA grade)
-        "amborella", "nymphaea", "cabomba", "illicium", "austrobaileya", "schisandra", "trithuria", "anita", "無油樟", "無名樹",
-        # Gymnosperms / Seed-free Plants
-        "ginkgo", "pinus", "cycas", "picea", "ephedra", "welwitschia", "gnetum",
-        "marchantia", "physcomitrella", "selaginella", "ceratopteris", "equisetum", "銀杏",
-        # Explicit outgroup keywords
-        "outgroup", "_og", "外群",
-        # Chordates / Vertebrates / Invertebrate outgroups
-        "amphioxus", "branchiostoma", "ciona", "petromyzon", "lampetra",
-        "callorhinchus", "latimeria", "xenopus", "ornithorhynchus", "monodelphis",
-        "drosophila", "caenorhabditis", "phoca", "canis"
-    ]
-
     def detect_candidate_outgroups(self, tree: Phylo.BaseTree.Tree) -> list[str]:
         """
-        Intelligently identifies candidate outgroups:
-        1. Prioritizes authentic biological basal clades (e.g. Amborella in angiosperms, Ginkgo in seed plants).
-        2. Prioritizes explicit outgroup tags (e.g. 'outgroup', '_og', '外群').
-        3. Falls back to evolutionary distance without being misled by fast-evolving taxa.
+        Returns terminal taxa for outgroup selection:
+        1. Prioritizes explicitly annotated outgroups (containing 'outgroup', '_og', or '外群' in label).
+        2. Followed by cleanly sorted terminal taxa.
+        Avoids brittle hardcoded species dictionaries or misleading rate-based heuristics.
         """
-        terminals = [t for t in tree.get_terminals() if t.name]
+        terminals = [t.name for t in tree.get_terminals() if t.name]
         if not terminals:
             return []
-        if len(terminals) <= 2:
-            return [t.name for t in terminals]
-
-        scores = {}
-        for t in terminals:
-            name_lower = t.name.lower()
-            bio_score = 0.0
-
-            # Explicit outgroup tag gets highest score
-            if any(k in name_lower for k in ("outgroup", "_og", "外群")):
-                bio_score += 2000.0
-            # Known biological basal clades (e.g. Amborella)
-            elif any(k in name_lower for k in self.KNOWN_BIOLOGICAL_OUTGROUPS):
-                bio_score += 1000.0
-
-            # Distance calculation (for rate/divergence reference)
-            dists = []
-            for other in terminals:
-                if other != t:
-                    try:
-                        dists.append(tree.distance(t, other))
-                    except Exception:
-                        pass
-            avg_dist = (sum(dists) / len(dists)) if dists else 0.0
-            scores[t.name] = bio_score + avg_dist
-
-        return sorted(scores.keys(), key=lambda name: scores[name], reverse=True)
+        tagged = [t for t in terminals if any(k in t.lower() for k in ("outgroup", "_og", "外群"))]
+        untagged = sorted([t for t in terminals if t not in tagged])
+        return tagged + untagged
 
     def load_tree_file(self, tree_path: str | Path, show_alert: bool = True):
         self.current_tree_file = Path(tree_path)
@@ -365,29 +327,19 @@ class TreeCanvasWidget(QWidget):
             terminals = [t.name for t in self.tree.get_terminals() if t.name]
             candidates = self.detect_candidate_outgroups(self.tree)
 
-            def make_og_label(name: str, is_recommended: bool = False) -> str:
+            def make_og_label(name: str) -> str:
                 name_lower = name.lower()
-                is_bio = any(k in name_lower for k in self.KNOWN_BIOLOGICAL_OUTGROUPS) or any(k in name_lower for k in ("outgroup", "_og", "外群"))
-                tag = " (⭐ 推薦生物學外群)" if is_bio else " (推薦外群)"
-                if len(name) > 22:
-                    short = f"{name[:10]}...{name[-6:]}"
+                is_tagged = any(k in name_lower for k in ("outgroup", "_og", "外群"))
+                tag = " [標註外群]" if is_tagged else ""
+                if len(name) > 24:
+                    short = f"{name[:12]}...{name[-8:]}"
                 else:
                     short = name
-                return f"{short}{tag}" if is_recommended else short
+                return f"{short}{tag}"
 
-            if candidates:
-                best_og = candidates[0]
-                self.outgroup_combo.addItem(make_og_label(best_og, True), userData=best_og)
-                self.outgroup_combo.setItemData(0, f"完整物種 ID: {best_og}\n(系統依拓撲深度推薦之基底外群)", Qt.ToolTipRole)
-                for t in candidates[1:]:
-                    idx = self.outgroup_combo.count()
-                    self.outgroup_combo.addItem(make_og_label(t), userData=t)
-                    self.outgroup_combo.setItemData(idx, f"完整物種 ID: {t}", Qt.ToolTipRole)
-            else:
-                for t in sorted(terminals):
-                    idx = self.outgroup_combo.count()
-                    self.outgroup_combo.addItem(make_og_label(t), userData=t)
-                    self.outgroup_combo.setItemData(idx, f"完整物種 ID: {t}", Qt.ToolTipRole)
+            for idx, t in enumerate(candidates):
+                self.outgroup_combo.addItem(make_og_label(t), userData=t)
+                self.outgroup_combo.setItemData(idx, f"完整物種 ID: {t}", Qt.ToolTipRole)
 
             if "timetree" in str(self.current_tree_file).lower():
                 self.time_scale_cb.setChecked(True)
@@ -420,7 +372,7 @@ class TreeCanvasWidget(QWidget):
             raw_text = self.outgroup_combo.currentText().strip()
             if not raw_text:
                 return
-            outgroup_name = raw_text.split(" (推薦外群")[0].split(" (⭐")[0].strip()
+            outgroup_name = raw_text.split(" [標註外群]")[0].split(" (推薦外群")[0].split(" (⭐")[0].strip()
 
         try:
             self.tree.root_with_outgroup({"name": outgroup_name})
