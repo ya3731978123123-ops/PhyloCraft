@@ -46,3 +46,4 @@ output/
 
 # 3. 研發與臨時草稿腳本目錄 (保留核心 scripts/ 與 tests/)
 scratch/
+push_to_github.bat
