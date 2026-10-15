@@ -229,6 +229,7 @@ class TreeCanvasWidget(QWidget):
         # Matplotlib Figure & ScrollArea
         self.fig = plt.figure(figsize=(9, 6), dpi=100)
         self.canvas = FigureCanvas(self.fig)
+        self.canvas.mpl_connect("button_press_event", self.on_canvas_clicked)
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
@@ -302,26 +303,46 @@ class TreeCanvasWidget(QWidget):
         ax.axis("off")
         self.canvas.draw()
 
+    KNOWN_BIOLOGICAL_OUTGROUPS = [
+        # Basal Angiosperms (ANA grade)
+        "amborella", "nymphaea", "cabomba", "illicium", "austrobaileya", "schisandra", "trithuria", "anita", "無油樟", "無名樹",
+        # Gymnosperms / Seed-free Plants
+        "ginkgo", "pinus", "cycas", "picea", "ephedra", "welwitschia", "gnetum",
+        "marchantia", "physcomitrella", "selaginella", "ceratopteris", "equisetum", "銀杏",
+        # Explicit outgroup keywords
+        "outgroup", "_og", "外群",
+        # Chordates / Vertebrates / Invertebrate outgroups
+        "amphioxus", "branchiostoma", "ciona", "petromyzon", "lampetra",
+        "callorhinchus", "latimeria", "xenopus", "ornithorhynchus", "monodelphis",
+        "drosophila", "caenorhabditis", "phoca", "canis"
+    ]
+
     def detect_candidate_outgroups(self, tree: Phylo.BaseTree.Tree) -> list[str]:
-        """Calculates mean evolutionary distance to other taxa to recommend the most divergent outgroup."""
+        """
+        Intelligently identifies candidate outgroups:
+        1. Prioritizes authentic biological basal clades (e.g. Amborella in angiosperms, Ginkgo in seed plants).
+        2. Prioritizes explicit outgroup tags (e.g. 'outgroup', '_og', '外群').
+        3. Falls back to evolutionary distance without being misled by fast-evolving taxa.
+        """
         terminals = [t for t in tree.get_terminals() if t.name]
         if not terminals:
             return []
         if len(terminals) <= 2:
             return [t.name for t in terminals]
 
-        avg_dists = {}
-        # For large trees (>80 taxa), avoid O(N^2) full pairwise distance search which freezes the UI
-        if len(terminals) > 80:
-            ref = terminals[0]
-            for t in terminals:
-                try:
-                    avg_dists[t.name] = tree.distance(ref, t)
-                except Exception:
-                    avg_dists[t.name] = 0.0
-            return sorted(avg_dists.keys(), key=lambda name: avg_dists[name], reverse=True)
-
+        scores = {}
         for t in terminals:
+            name_lower = t.name.lower()
+            bio_score = 0.0
+
+            # Explicit outgroup tag gets highest score
+            if any(k in name_lower for k in ("outgroup", "_og", "外群")):
+                bio_score += 2000.0
+            # Known biological basal clades (e.g. Amborella)
+            elif any(k in name_lower for k in self.KNOWN_BIOLOGICAL_OUTGROUPS):
+                bio_score += 1000.0
+
+            # Distance calculation (for rate/divergence reference)
             dists = []
             for other in terminals:
                 if other != t:
@@ -329,9 +350,10 @@ class TreeCanvasWidget(QWidget):
                         dists.append(tree.distance(t, other))
                     except Exception:
                         pass
-            avg_dists[t.name] = (sum(dists) / len(dists)) if dists else 0.0
+            avg_dist = (sum(dists) / len(dists)) if dists else 0.0
+            scores[t.name] = bio_score + avg_dist
 
-        return sorted(avg_dists.keys(), key=lambda name: avg_dists[name], reverse=True)
+        return sorted(scores.keys(), key=lambda name: scores[name], reverse=True)
 
     def load_tree_file(self, tree_path: str | Path, show_alert: bool = True):
         self.current_tree_file = Path(tree_path)
@@ -344,12 +366,14 @@ class TreeCanvasWidget(QWidget):
             candidates = self.detect_candidate_outgroups(self.tree)
 
             def make_og_label(name: str, is_recommended: bool = False) -> str:
-                # If name is long, smartly ellipsize for display so it never overflows the combo box
+                name_lower = name.lower()
+                is_bio = any(k in name_lower for k in self.KNOWN_BIOLOGICAL_OUTGROUPS) or any(k in name_lower for k in ("outgroup", "_og", "外群"))
+                tag = " (⭐ 推薦生物學外群)" if is_bio else " (推薦外群)"
                 if len(name) > 22:
                     short = f"{name[:10]}...{name[-6:]}"
                 else:
                     short = name
-                return f"{short} (推薦外群)" if is_recommended else short
+                return f"{short}{tag}" if is_recommended else short
 
             if candidates:
                 best_og = candidates[0]
@@ -421,6 +445,33 @@ class TreeCanvasWidget(QWidget):
             self.tree = copy.deepcopy(self.original_tree)
             self.redraw_tree()
             self.root_status_label.setText("✓ 已復原為原始樹")
+
+    def on_canvas_clicked(self, event):
+        """Allows direct canvas click / double-click on any taxon branch or label to set outgroup & reroot."""
+        if not event.inaxes or event.xdata is None or event.ydata is None or not self.tree:
+            return
+        clicked_leaf = None
+        min_dy = 0.50
+        for name, (lx, ly, tx) in getattr(self, "leaf_positions", {}).items():
+            dy = abs(ly - event.ydata)
+            if dy < min_dy and event.xdata >= (lx * 0.3):
+                min_dy = dy
+                clicked_leaf = name
+
+        if clicked_leaf:
+            # Sync selection in outgroup_combo
+            for idx in range(self.outgroup_combo.count()):
+                data = self.outgroup_combo.itemData(idx)
+                if data == clicked_leaf or clicked_leaf in str(data):
+                    self.outgroup_combo.setCurrentIndex(idx)
+                    break
+
+            # If double click or right click, automatically reroot
+            if getattr(event, "dblclick", False) or getattr(event, "button", 1) == 3:
+                self.apply_outgroup_root()
+                self.root_status_label.setText(f"✓ 已點選分支定根: {clicked_leaf}")
+            else:
+                self.root_status_label.setText(f"已選取外群: {clicked_leaf} (點擊「套用外群」或雙擊即可定根)")
 
     def redraw_tree(self):
         if not self.tree:
@@ -560,6 +611,7 @@ class TreeCanvasWidget(QWidget):
 
         # Draw Leaf labels
         query = self.search_query.strip().lower()
+        self.leaf_positions = {}
         for leaf in leaves:
             raw_lx = x_coords[leaf]
             lx = max(raw_lx, raw_lx + min_stub) if not is_cladogram else raw_lx
@@ -573,6 +625,9 @@ class TreeCanvasWidget(QWidget):
                 text_x = target_x + max_x * 0.02
             else:
                 text_x = lx + max_x * 0.02
+
+            if leaf.name:
+                self.leaf_positions[leaf.name] = (lx, ly, text_x)
 
             lbl_color = "#f5a97f" if is_matched else text_color
             lbl_weight = "bold" if is_matched else "normal"
