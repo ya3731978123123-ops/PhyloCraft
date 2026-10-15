@@ -1,0 +1,144 @@
+IQ-TREE version 3.1.4 for Windows 64-bit built Sep 10 2026
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    LAPTOP-8O05KAOC (AVX2, FMA3, 15 GB RAM)
+Command: C:\Users\Alan\OneDrive\Desktop\m\bin\iqtree3.exe -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_ursidae\ursidae_all_8_species_full_trimmed.fasta -pre C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml -m TPM2u+F+G4 -B 1000 -alrt 1000 -T 2 -redo --keep-ident
+Seed:    639549 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Thu Oct 15 18:24:44 2026
+Kernel:  AVX+FMA - 2 threads (12 CPU cores detected)
+
+Reading alignment file C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_ursidae\ursidae_all_8_species_full_trimmed.fasta ... Fasta format detected
+Reading fasta file: done in 0.0003091 secs
+Alignment most likely contains DNA/RNA sequences
+Constructing alignment: done in 0.0008529 secs
+Alignment has 10 sequences with 1140 columns, 283 distinct patterns
+267 parsimony-informative, 188 singleton sites, 685 constant sites
+                                      Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 1.46e-005 secs
+   1  Giant_panda_Ailuropoda_melanoleuca      0.00%    failed      0.39%
+   2  Spectacled_bear_Tremarctos_ornatus      0.00%    passed     87.08%
+   3  Sloth_bear_Melursus_ursinus             0.00%    passed     74.66%
+   4  Sun_bear_Helarctos_malayanus            0.00%    passed     97.16%
+   5  Asian_black_bear_Ursus_thibetanus       0.00%    passed     43.94%
+   6  American_black_bear_Ursus_americanus    0.00%    passed     99.73%
+   7  Brown_bear_Ursus_arctos                 0.00%    passed     98.68%
+   8  Polar_bear_Ursus_maritimus              0.00%    passed     97.47%
+   9  Harbor_seal_Phoca_vitulina              0.00%    passed     16.56%
+  10  Dog_Canis_lupus_familiaris              0.00%    passed     46.72%
+****  TOTAL                                   0.00%  1 sequences failed composition chi2 test (p-value<5%; df=3)
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.000 seconds
+Generating 1000 samples for ultrafast bootstrap (seed: 639549)...
+
+NOTE: 1 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -5528.431
+2. Current log-likelihood: -5044.085
+3. Current log-likelihood: -5012.641
+4. Current log-likelihood: -4932.719
+5. Current log-likelihood: -4918.030
+6. Current log-likelihood: -4915.703
+7. Current log-likelihood: -4914.951
+8. Current log-likelihood: -4914.648
+9. Current log-likelihood: -4914.537
+Optimal log-likelihood: -4914.444
+Rate parameters:  A-C: 5.76883  A-G: 99.78898  A-T: 5.76883  C-G: 1.00000  C-T: 99.78898  G-T: 1.00000
+Base frequencies:  A: 0.290  C: 0.294  G: 0.144  T: 0.272
+Gamma shape alpha: 0.222
+Parameters optimization took 9 rounds (0.016 sec)
+
+WARNING: Estimated model parameters are at boundary that can cause numerical instability!
+
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 0.0001777 secs
+Computing ML distances took 0.000240 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 3.6e-005 secs
+Constructing RapidNJ tree: done in 4.03e-005 secs
+Computing RapidNJ tree took 0.000138 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -4914.440
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 99 parsimony trees... 0.052 second
+Computing log-likelihood of 85 initial trees ... 0.035 seconds
+Current best score: -4914.440
+
+Do NNI search on 20 best initial trees
+Estimate model parameters (epsilon = 0.100)
+
+WARNING: Estimated model parameters are at boundary that can cause numerical instability!
+
+BETTER TREE FOUND at iteration 1: -4912.684
+Iteration 10 / LogL: -4912.728 / Time: 0h:0m:0s
+Iteration 20 / LogL: -4912.686 / Time: 0h:0m:0s
+Finish initializing candidate tree set (2)
+Current best tree score: -4912.684 / CPU time: 0.200
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+UPDATE BEST LOG-LIKELIHOOD: -4912.683
+UPDATE BEST LOG-LIKELIHOOD: -4912.683
+UPDATE BEST LOG-LIKELIHOOD: -4912.682
+Iteration 30 / LogL: -4912.685 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 40 / LogL: -4912.687 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 50 / LogL: -4912.728 / Time: 0h:0m:0s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -4938.399
+Iteration 60 / LogL: -4912.711 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 70 / LogL: -4912.689 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 80 / LogL: -4912.683 / Time: 0h:0m:1s (0h:0m:0s left)
+Iteration 90 / LogL: -4912.707 / Time: 0h:0m:1s (0h:0m:0s left)
+Iteration 100 / LogL: -4912.683 / Time: 0h:0m:1s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -4939.162
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.999
+TREE SEARCH COMPLETED AFTER 102 ITERATIONS / Time: 0h:0m:1s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -4912.682
+Optimal log-likelihood: -4912.673
+Rate parameters:  A-C: 5.57100  A-G: 99.80210  A-T: 5.57100  C-G: 1.00000  C-T: 99.80210  G-T: 1.00000
+Base frequencies:  A: 0.290  C: 0.294  G: 0.144  T: 0.272
+Gamma shape alpha: 0.221
+Parameters optimization took 1 rounds (0.001 sec)
+
+WARNING: Estimated model parameters are at boundary that can cause numerical instability!
+
+BEST SCORE FOUND : -4912.673
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+0.102 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.splits.nex
+Total tree length: 1.931
+
+Total number of iterations: 102
+CPU time used for tree search: 2.578 sec (0h:0m:2s)
+Wall-clock time used for tree search: 1.391 sec (0h:0m:1s)
+Total CPU time used: 2.922 sec (0h:0m:2s)
+Total wall-clock time used: 1.588 sec (0h:0m:1s)
+
+Computing bootstrap consensus tree...
+Reading input file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.splits.nex...
+10 taxa and 64 splits.
+Consensus tree written to C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.contree
+Reading input trees file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.contree
+Log-likelihood of consensus tree: -4912.672
+
+Analysis results written to: 
+  IQ-TREE report:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.iqtree
+  Maximum-likelihood tree:       C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.treefile
+  Likelihood distances:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.splits.nex
+  Consensus tree:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.contree
+  Screen log file:               C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.log
+
+Date and Time: Thu Oct 15 18:24:46 2026

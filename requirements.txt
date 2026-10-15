@@ -1,0 +1,5 @@
+PySide6>=6.5.0
+biopython>=1.80
+matplotlib>=3.7.0
+pandas>=2.0.0
+toytree>=3.0.0

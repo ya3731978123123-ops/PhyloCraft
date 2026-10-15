@@ -1,0 +1,89 @@
+#nexus
+
+BEGIN Taxa;
+DIMENSIONS ntax=10;
+TAXLABELS
+[1] 'Giant_panda_Ailuropoda_melanoleuca'
+[2] 'Spectacled_bear_Tremarctos_ornatus'
+[3] 'Sloth_bear_Melursus_ursinus'
+[4] 'Sun_bear_Helarctos_malayanus'
+[5] 'Asian_black_bear_Ursus_thibetanus'
+[6] 'American_black_bear_Ursus_americanus'
+[7] 'Brown_bear_Ursus_arctos'
+[8] 'Polar_bear_Ursus_maritimus'
+[9] 'Harbor_seal_Phoca_vitulina'
+[10] 'Dog_Canis_lupus_familiaris'
+;
+END; [Taxa]
+
+BEGIN Splits;
+DIMENSIONS ntax=10 nsplits=64;
+FORMAT labels=no weights=yes confidences=no intervals=no;
+MATRIX
+	100	 2,
+	100	 9,
+	100	 10,
+	90	 9 10,
+	10	 2 9 10,
+	100	 3,
+	100	 4,
+	100	 5,
+	100	 6,
+	89	 5 6,
+	73	 4 5 6,
+	39	 3 4 5 6,
+	100	 7,
+	100	 8,
+	98	 7 8,
+	95	 1 2 9 10,
+	100	 1,
+	13	 3 5 6,
+	13	 1 2 4 9 10,
+	76	 1 9 10,
+	10	 4 7 8,
+	17	 1 2 3 9 10,
+	29	 3 7 8,
+	9	 4 6,
+	0	 3 6,
+	12	 1 2,
+	10	 1 10,
+	1	 1 2 8 9 10,
+	0	 2 3 7 8,
+	0	 1 2 4 5 6,
+	0	 1 4 5 6,
+	1	 3 4,
+	0	 2 4,
+	2	 3 5 7 8,
+	1	 2 3,
+	1	 3 5,
+	0	 1 4 9 10,
+	2	 5 6 7 8,
+	2	 1 7 8 9 10,
+	0	 2 5 6,
+	2	 3 4 7 8,
+	1	 2 9,
+	1	 1 7 9 10,
+	1	 4 5,
+	1	 1 2 7 9 10,
+	1	 1 2 10,
+	0	 2 4 5 6,
+	0	 1 2 5 9 10,
+	1	 7 8 9 10,
+	0	 1 2 3,
+	0	 1 4,
+	0	 7 8 9,
+	0	 2 4 9 10,
+	0	 3 8,
+	0	 1 7 8,
+	0	 1 3 9 10,
+	0	 1 2 6 9 10,
+	0	 2 7 8,
+	0	 2 3 5 6,
+	0	 4 5 6 7,
+	0	 1 2 3 7 8,
+	0	 1 7,
+	0	 1 3 7 8,
+	0	 3 4 6,
+;
+END; [Splits]
+

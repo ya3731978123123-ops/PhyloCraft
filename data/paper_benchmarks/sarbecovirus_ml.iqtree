@@ -1,0 +1,152 @@
+IQ-TREE 3.1.4 built Sep 10 2026
+
+Input file name: C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\sarbecovirus_trim.fasta
+Type of analysis: tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 273321
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Piyumal Demotte, Hector Banos,
+Andrew J. Roger, Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman,
+Matthew W. Hahn, Mario dos Reis, Le Sy Vinh, Gavin Huttley, Robert Lanfear, Bui Quang Minh (2026)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Molecular Biology and Evolution, msag117.
+https://doi.org/10.1093/molbev/msag117
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+NOTE: Alignment sequence type is auto-detected. If in doubt, specify it via -st option.
+Input data: 5 sequences with 3793 nucleotide sites
+Number of constant sites: 1481 (= 39.0456% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 1481 (= 39.0456% of all sites)
+Number of parsimony informative sites: 632
+Number of distinct site patterns: 475
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: TIM2+F+G4
+
+Rate parameter R:
+
+  A-C: 1.8851
+  A-G: 3.9464
+  A-T: 1.8851
+  C-G: 1.0000
+  C-T: 5.2879
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.2818
+  pi(C) = 0.1982
+  pi(G) = 0.1863
+  pi(T) = 0.3337
+
+Rate matrix Q:
+
+  A   -0.9258    0.1991    0.3916    0.3351
+  C     0.283    -1.322   0.09923    0.9399
+  G    0.5925    0.1056   -0.8758    0.1778
+  T     0.283    0.5584   0.09923   -0.9406
+
+Model of rate heterogeneity: Gamma with 4 categories
+Gamma shape alpha: 0.9836
+
+ Category  Relative_rate  Proportion
+  1         0.1337         0.25
+  2         0.4718         0.25
+  3         0.9972         0.25
+  4         2.397          0.25
+Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -15879.5496 (s.e. 124.7345)
+Unconstrained log-likelihood (without tree): -16613.1511
+Number of free parameters (#branches + #model parameters): 14
+Akaike information criterion (AIC) score: 31787.0991
+Corrected Akaike information criterion (AICc) score: 31787.2103
+Bayesian information criterion (BIC) score: 31874.4719
+
+Total tree length (sum of branch lengths): 2.0316
+Sum of internal branch lengths: 0.1382 (6.8032% of tree length)
+
+NOTE: Tree is UNROOTED although outgroup taxon 'SARS_CoV_2_Wuhan_Hu_1' is drawn at root
+Numbers in parentheses are SH-aLRT support (%) / ultrafast bootstrap support (%)
+
++--SARS_CoV_2_Wuhan_Hu_1
+|
++--Bat_CoV_RaTG13
+|
+|      +--------SARS_CoV_Tor2
+|   +--| (73/59)
+|   |  +-----Bat_SARS_like_ZC45
++---| (100/100)
+    +------------------------------------------------------MERS_CoV
+
+Tree in newick format:
+
+(SARS_CoV_2_Wuhan_Hu_1:0.0407218714,Bat_CoV_RaTG13:0.0347490766,((SARS_CoV_Tor2:0.2380932772,Bat_SARS_like_ZC45:0.1634168705)73/59:0.0354071915,MERS_CoV:1.4164186145)100/100:0.1028079257);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -15879.550457
+Robinson-Foulds distance between ML tree and consensus tree: 0
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++--SARS_CoV_2_Wuhan_Hu_1
+|
++--Bat_CoV_RaTG13
+|
+|      +--------SARS_CoV_Tor2
+|   +--| (59)
+|   |  +-----Bat_SARS_like_ZC45
++---| (100)
+    +------------------------------------------------------MERS_CoV
+
+
+Consensus tree in newick format: 
+
+(SARS_CoV_2_Wuhan_Hu_1:0.0407210801,Bat_CoV_RaTG13:0.0347528222,((SARS_CoV_Tor2:0.2382237660,Bat_SARS_like_ZC45:0.1635313317)59:0.0344592396,MERS_CoV:1.4168960389)100:0.1036554161);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.treefile -m "TIM2{1.88513,3.94645,5.28786}+F{0.281823,0.198231,0.186273,0.333673}+G4{0.983579}" --length 3793
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\sarbecovirus_trim.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\sarbecovirus_trim.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct 15 18:06:37 2026
+Total CPU time used: 2.28125 seconds (0h:0m:2s)
+Total wall-clock time used: 1.3304723 seconds (0h:0m:1s)
+

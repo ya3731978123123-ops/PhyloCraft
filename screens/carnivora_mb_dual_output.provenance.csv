@@ -1,0 +1,6 @@
+﻿物種學名 (Scientific Name),NCBI 登錄號 (Accession),基因代號 (Gene),產品名稱 (Product),染色體/基因組座標 (Coordinates),股向 (Strand),核酸長度 (bp),蛋白質長度 (aa),蛋白質 ID (Protein ID),TaxID,SHA-256 數位指紋 (Checksum),NCBI 官方檢驗連結 (Direct URL),擷取時間 (Timestamp)
+Eumetopias jubatus,XM_028088580.1,MB,MYOGLOBIN,1..465,+,465,154,XP_027944381.1,34886,27a51049878a064f96237fe27e6f8d168d187a62771581dbb39805937514f1e7,https://www.ncbi.nlm.nih.gov/nuccore/XM_028088580.1,2026-10-15 23:52:34
+Ursus americanus,XM_045779999.2,MB,MYOGLOBIN,85..549,+,465,154,XP_045635955.1,9643,c8a946d6d8512f811ef6bc6b5837a4917ce4432be3445abd7fb06f454fe29655,https://www.ncbi.nlm.nih.gov/nuccore/XM_045779999.2,2026-10-15 23:52:35
+Puma concolor,XM_025926566.2,MB,MYOGLOBIN,89..553,+,465,154,XP_025782351.1,9696,a2acb46af04a8ce3cfeb59c8624a7c2288b61a93f662196ea685f24fb215c94f,https://www.ncbi.nlm.nih.gov/nuccore/XM_025926566.2,2026-10-15 23:52:36
+Ailuropoda melanoleuca,XM_002925573.4,MB,MYOGLOBIN,86..550,+,465,154,XP_002925619.1,9646,3f701ab42865b99675cd3e0264410c5eee4a8febb8053c24642f300c8ea0c6d3,https://www.ncbi.nlm.nih.gov/nuccore/XM_002925573.4,2026-10-15 23:52:37
+Mustela nivalis,XM_082740349.1,MB,MYOGLOBIN,89..553,+,465,154,XP_082596475.1,36239,fdff09d2cb71e86af3a1eab45177d5ca1f4feb07846d4033dc110bcf2e79bcac,https://www.ncbi.nlm.nih.gov/nuccore/XM_082740349.1,2026-10-15 23:52:40

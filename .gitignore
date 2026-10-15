@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# PhyloCraft Specific Exclusions
+# 1. 外部二進位工具 (透過內建 tools_installer 一鍵自動線上下載，不進 Git 版本庫)
+bin/
+
+# 2. 輸出分析成果與本機使用者專案偏好
+output/
+.recent_projects.json
+*.phylo
+
+# 3. 研發與臨時草稿腳本目錄 (保留核心 scripts/ 與 tests/)
+scratch/

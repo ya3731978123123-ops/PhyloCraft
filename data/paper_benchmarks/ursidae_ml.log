@@ -1,0 +1,142 @@
+IQ-TREE version 3.1.4 for Windows 64-bit built Sep 10 2026
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    LAPTOP-8O05KAOC (AVX2, FMA3, 15 GB RAM)
+Command: C:\Users\Alan\OneDrive\Desktop\m\bin\iqtree3.exe -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\ursidae_trim.fasta -pre C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml -m HKY+F+G4 -B 1000 -alrt 1000 -T 2 -redo --keep-ident
+Seed:    57822 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Thu Oct 15 18:06:32 2026
+Kernel:  AVX+FMA - 2 threads (12 CPU cores detected)
+
+Reading alignment file C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\ursidae_trim.fasta ... Fasta format detected
+Reading fasta file: done in 0.0002329 secs
+Alignment most likely contains DNA/RNA sequences
+Constructing alignment: done in 0.0011167 secs
+Alignment has 6 sequences with 1140 columns, 124 distinct patterns
+177 parsimony-informative, 223 singleton sites, 740 constant sites
+                        Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 1.3e-005 secs
+   1  Ursus_maritimus           0.00%    passed     87.37%
+   2  Ursus_arctos              0.00%    passed     75.00%
+   3  Ursus_americanus          0.00%    passed     82.76%
+   4  Tremarctos_ornatus        0.00%    passed     76.57%
+   5  Ailuropoda_melanoleuca    0.00%    failed      4.02%
+   6  Canis_lupus_familiaris    0.00%    passed     84.19%
+****  TOTAL                     0.00%  1 sequences failed composition chi2 test (p-value<5%; df=3)
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.000 seconds
+Generating 1000 samples for ultrafast bootstrap (seed: 57822)...
+
+NOTE: 0 MB RAM (0 GB) is required!
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -4108.372
+2. Current log-likelihood: -3844.915
+3. Current log-likelihood: -3725.058
+4. Current log-likelihood: -3707.045
+5. Current log-likelihood: -3706.387
+6. Current log-likelihood: -3706.258
+7. Current log-likelihood: -3706.143
+Optimal log-likelihood: -3706.008
+Rate parameters:  A-C: 1.00000  A-G: 66.12189  A-T: 1.00000  C-G: 1.00000  C-T: 66.12189  G-T: 1.00000
+Base frequencies:  A: 0.288  C: 0.286  G: 0.145  T: 0.281
+Gamma shape alpha: 0.129
+Parameters optimization took 7 rounds (0.003 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 9.73e-005 secs
+Computing ML distances took 0.000149 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 2.65e-005 secs
+Constructing RapidNJ tree: done in 3.27e-005 secs
+Computing RapidNJ tree took 0.000118 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -3706.008
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 99 parsimony trees... 0.023 second
+Computing log-likelihood of 6 initial trees ... 0.001 seconds
+Current best score: -3706.008
+
+Do NNI search on 7 best initial trees
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+Finish initializing candidate tree set (7)
+Current best tree score: -3706.008 / CPU time: 0.048
+Number of iterations: 7
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+Iteration 10 / LogL: -3706.008 / Time: 0h:0m:0s
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+Iteration 20 / LogL: -3706.008 / Time: 0h:0m:0s
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+Iteration 30 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 40 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+UPDATE BEST LOG-LIKELIHOOD: -3706.008
+Iteration 50 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -3719.147
+Iteration 60 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 70 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 80 / LogL: -3706.008 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 90 / LogL: -3706.009 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 100 / LogL: -3706.008 / Time: 0h:0m:1s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -3719.702
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 1.000
+TREE SEARCH COMPLETED AFTER 101 ITERATIONS / Time: 0h:0m:1s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -3706.008
+2. Current log-likelihood: -3705.963
+3. Current log-likelihood: -3705.895
+4. Current log-likelihood: -3705.840
+5. Current log-likelihood: -3705.797
+6. Current log-likelihood: -3705.763
+7. Current log-likelihood: -3705.737
+8. Current log-likelihood: -3705.718
+9. Current log-likelihood: -3705.703
+10. Current log-likelihood: -3705.691
+Optimal log-likelihood: -3705.678
+Rate parameters:  A-C: 1.00000  A-G: 55.50193  A-T: 1.00000  C-G: 1.00000  C-T: 55.50193  G-T: 1.00000
+Base frequencies:  A: 0.288  C: 0.286  G: 0.145  T: 0.281
+Gamma shape alpha: 0.140
+Parameters optimization took 10 rounds (0.003 sec)
+BEST SCORE FOUND : -3705.678
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+0.012 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.splits.nex
+Total tree length: 2.923
+
+Total number of iterations: 101
+CPU time used for tree search: 1.797 sec (0h:0m:1s)
+Wall-clock time used for tree search: 1.061 sec (0h:0m:1s)
+Total CPU time used: 1.891 sec (0h:0m:1s)
+Total wall-clock time used: 1.127 sec (0h:0m:1s)
+
+Computing bootstrap consensus tree...
+Reading input file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.splits.nex...
+6 taxa and 18 splits.
+Consensus tree written to C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.contree
+Reading input trees file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.contree
+Log-likelihood of consensus tree: -3705.679
+
+Analysis results written to: 
+  IQ-TREE report:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.iqtree
+  Maximum-likelihood tree:       C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.treefile
+  Likelihood distances:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.splits.nex
+  Consensus tree:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.contree
+  Screen log file:               C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_ml.log
+
+Date and Time: Thu Oct 15 18:06:33 2026

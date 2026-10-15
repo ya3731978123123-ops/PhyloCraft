@@ -1,0 +1,172 @@
+IQ-TREE 3.1.4 built Sep 10 2026
+
+Input file name: C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_ursidae\ursidae_all_8_species_full_trimmed.fasta
+Type of analysis: tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 639549
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Piyumal Demotte, Hector Banos,
+Andrew J. Roger, Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman,
+Matthew W. Hahn, Mario dos Reis, Le Sy Vinh, Gavin Huttley, Robert Lanfear, Bui Quang Minh (2026)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Molecular Biology and Evolution, msag117.
+https://doi.org/10.1093/molbev/msag117
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+NOTE: Alignment sequence type is auto-detected. If in doubt, specify it via -st option.
+Input data: 10 sequences with 1140 nucleotide sites
+Number of constant sites: 685 (= 60.0877% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 685 (= 60.0877% of all sites)
+Number of parsimony informative sites: 267
+Number of distinct site patterns: 283
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: TPM2u+F+G4
+
+Rate parameter R:
+
+  A-C: 5.5710
+  A-G: 99.8021
+  A-T: 5.5710
+  C-G: 1.0000
+  C-T: 99.8021
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.2903
+  pi(C) = 0.2939
+  pi(G) = 0.1437
+  pi(T) = 0.2721
+
+Rate matrix Q:
+
+  A   -0.6656    0.0623    0.5456   0.05768
+  C   0.06152      -1.1  0.005467     1.033
+  G     1.102   0.01118    -1.124   0.01035
+  T   0.06152     1.116  0.005467    -1.183
+
+Model of rate heterogeneity: Gamma with 4 categories
+Gamma shape alpha: 0.2211
+
+ Category  Relative_rate  Proportion
+  1         0.001026       0.25
+  2         0.04675        0.25
+  3         0.4364         0.25
+  4         3.516          0.25
+Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -4912.6728 (s.e. 113.0587)
+Unconstrained log-likelihood (without tree): -4115.0511
+Number of free parameters (#branches + #model parameters): 23
+Akaike information criterion (AIC) score: 9871.3457
+Corrected Akaike information criterion (AICc) score: 9872.3349
+Bayesian information criterion (BIC) score: 9987.2377
+
+Total tree length (sum of branch lengths): 1.9310
+Sum of internal branch lengths: 0.2918 (15.1115% of tree length)
+
+NOTE: Tree is UNROOTED although outgroup taxon 'Giant_panda_Ailuropoda_melanoleuca' is drawn at root
+Numbers in parentheses are SH-aLRT support (%) / ultrafast bootstrap support (%)
+
++--------------------------Giant_panda_Ailuropoda_melanoleuca
+|
+|  +--------------Spectacled_bear_Tremarctos_ornatus
++--| (80.7/76)
+|  |      +----Sloth_bear_Melursus_ursinus
+|  |   +--| (0/39)
+|  |   |  |  +----Sun_bear_Helarctos_malayanus
+|  |   |  +--| (87.2/73)
+|  |   |     |  +--Asian_black_bear_Ursus_thibetanus
+|  |   |     +--| (91.1/89)
+|  |   |        +-----American_black_bear_Ursus_americanus
+|  +---| (96.9/95)
+|      |  +--Brown_bear_Ursus_arctos
+|      +--| (96.6/98)
+|         +--Polar_bear_Ursus_maritimus
+|
+|          +------------------------Harbor_seal_Phoca_vitulina
++----------| (94.9/90)
+           +-----------------------------------------------Dog_Canis_lupus_familiaris
+
+Tree in newick format:
+
+(Giant_panda_Ailuropoda_melanoleuca:0.3203077290,(Spectacled_bear_Tremarctos_ornatus:0.1777897825,((Sloth_bear_Melursus_ursinus:0.0604900623,(Sun_bear_Helarctos_malayanus:0.0602436699,(Asian_black_bear_Ursus_thibetanus:0.0463866578,American_black_bear_Ursus_americanus:0.0819359806)91.1/89:0.0229214379)87.2/73:0.0129509169)0/39:0.0015933199,(Brown_bear_Ursus_arctos:0.0169691144,Polar_bear_Ursus_maritimus:0.0081091013)96.6/98:0.0399876182)96.9/95:0.0577399961)80.7/76:0.0254550049,(Harbor_seal_Phoca_vitulina:0.2946045577,Dog_Canis_lupus_familiaris:0.5723789885)94.9/90:0.1311578448);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -4912.672192
+Robinson-Foulds distance between ML tree and consensus tree: 0
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++--------------------------Giant_panda_Ailuropoda_melanoleuca
+|
+|  +--------------Spectacled_bear_Tremarctos_ornatus
++--| (76)
+|  |      +----Sloth_bear_Melursus_ursinus
+|  |   +--| (39)
+|  |   |  |  +----Sun_bear_Helarctos_malayanus
+|  |   |  +--| (73)
+|  |   |     |  +--Asian_black_bear_Ursus_thibetanus
+|  |   |     +--| (89)
+|  |   |        +-----American_black_bear_Ursus_americanus
+|  +---| (95)
+|      |  +--Brown_bear_Ursus_arctos
+|      +--| (98)
+|         +--Polar_bear_Ursus_maritimus
+|
+|          +------------------------Harbor_seal_Phoca_vitulina
++----------| (90)
+           +-----------------------------------------------Dog_Canis_lupus_familiaris
+
+
+Consensus tree in newick format: 
+
+(Giant_panda_Ailuropoda_melanoleuca:0.3213237869,(Spectacled_bear_Tremarctos_ornatus:0.1783278091,((Sloth_bear_Melursus_ursinus:0.0606460626,(Sun_bear_Helarctos_malayanus:0.0603830668,(Asian_black_bear_Ursus_thibetanus:0.0464995290,American_black_bear_Ursus_americanus:0.0821148182)89:0.0229960430)73:0.0129746082)39:0.0016815040,(Brown_bear_Ursus_arctos:0.0170127610,Polar_bear_Ursus_maritimus:0.0081165331)98:0.0399824460)95:0.0579520363)76:0.0254178732,(Harbor_seal_Phoca_vitulina:0.2954858972,Dog_Canis_lupus_familiaris:0.5732975821)90:0.1311843948);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\ursidae_all_8_species_full_ml.treefile -m "TPM2u{5.571,99.8021}+F{0.290263,0.293947,0.143684,0.272105}+G4{0.221076}" --length 1140
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_ursidae\ursidae_all_8_species_full_trimmed.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_ursidae\ursidae_all_8_species_full_trimmed.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct 15 18:24:46 2026
+Total CPU time used: 2.921875 seconds (0h:0m:2s)
+Total wall-clock time used: 1.6123339 seconds (0h:0m:1s)
+

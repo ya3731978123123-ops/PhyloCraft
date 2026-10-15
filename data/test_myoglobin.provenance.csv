@@ -1,0 +1,2 @@
+﻿物種學名 (Scientific Name),NCBI 登錄號 (Accession),基因代號 (Gene),產品名稱 (Product),染色體/基因組座標 (Coordinates),股向 (Strand),序列長度 (bp),蛋白質 ID (Protein ID),TaxID,SHA-256 數位指紋 (Checksum),NCBI 官方檢驗連結 (Direct URL),擷取時間 (Timestamp)
+Homo sapiens,NM_005368.3,MB,MYOGLOBIN ISOFORM 1,73..537,+,465,NP_005359.1,9606,84cf043adca55a92b610ff3f9934ac617845eaba05a6aed0a453e71c6676b2d0,https://www.ncbi.nlm.nih.gov/nuccore/NM_005368.3,2026-10-15 20:46:33

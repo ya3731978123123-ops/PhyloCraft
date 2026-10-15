@@ -1,0 +1,190 @@
+IQ-TREE 3.1.4 built Sep 10 2026
+
+Input file name: C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_primates\primates_comprehensive_14_taxa_trimmed.fasta
+Type of analysis: tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 738352
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Piyumal Demotte, Hector Banos,
+Andrew J. Roger, Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman,
+Matthew W. Hahn, Mario dos Reis, Le Sy Vinh, Gavin Huttley, Robert Lanfear, Bui Quang Minh (2026)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Molecular Biology and Evolution, msag117.
+https://doi.org/10.1093/molbev/msag117
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+NOTE: Alignment sequence type is auto-detected. If in doubt, specify it via -st option.
+Input data: 14 sequences with 1140 nucleotide sites
+Number of constant sites: 510 (= 44.7368% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 510 (= 44.7368% of all sites)
+Number of parsimony informative sites: 493
+Number of distinct site patterns: 549
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: TPM2u+F+I+G4
+
+Rate parameter R:
+
+  A-C: 3.1078
+  A-G: 16.8552
+  A-T: 3.1078
+  C-G: 1.0000
+  C-T: 16.8552
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.2953
+  pi(C) = 0.3243
+  pi(G) = 0.1224
+  pi(T) = 0.258
+
+Rate matrix Q:
+
+  A   -0.7375     0.192    0.3928    0.1527
+  C    0.1748    -1.026   0.02331    0.8283
+  G     0.948   0.06177    -1.059   0.04914
+  T    0.1748     1.041   0.02331    -1.239
+
+Model of rate heterogeneity: Invar+Gamma with 4 categories
+Proportion of invariable sites: 0.3788
+Gamma shape alpha: 1.485
+
+ Category  Relative_rate  Proportion
+  0         0              0.3788
+  1         0.3589         0.1553
+  2         0.9434         0.1553
+  3         1.689          0.1553
+  4         3.447          0.1553
+Relative rates are computed as MEAN of the portion of the Gamma distribution falling in the category.
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -8409.9171 (s.e. 184.0169)
+Unconstrained log-likelihood (without tree): -5393.2170
+Number of free parameters (#branches + #model parameters): 32
+Akaike information criterion (AIC) score: 16883.8342
+Corrected Akaike information criterion (AICc) score: 16885.7420
+Bayesian information criterion (BIC) score: 17045.0752
+
+Total tree length (sum of branch lengths): 2.9771
+Sum of internal branch lengths: 0.7204 (24.1986% of tree length)
+
+NOTE: Tree is UNROOTED although outgroup taxon 'Human_Homo_sapiens' is drawn at root
+Numbers in parentheses are SH-aLRT support (%) / ultrafast bootstrap support (%)
+
++----Human_Homo_sapiens
+|
+|  +--Chimpanzee_Pan_troglodytes
++--| (99.5/100)
+|  +--Bonobo_Pan_paniscus
+|
+|  +----Gorilla_Gorilla_gorilla
++--| (90.6/95)
+   |        +--Sumatran_Orangutan_Pongo_abelii
+   |  +-----| (100/100)
+   |  |     +--Bornean_Orangutan_Pongo_pygmaeus
+   +--| (96.6/97)
+      |  +----------Gibbon_Hylobates_lar
+      +--| (80.3/79)
+         |             +-----Rhesus_Macaca_mulatta
+         |  +----------| (100/100)
+         |  |          +-------Baboon_Papio_hamadryas
+         +--| (56.4/68)
+            |         +-------------------Marmoset_Callithrix_jacchus
+            +---------| (100/100)
+                      |          +-----------Squirrel_Monkey_Saimiri_sciureus
+                      |      +---| (64.8/51)
+                      |      |   +----------------------Treeshrew_Tupaia_belangeri
+                      |   +--| (77.6/55)
+                      |   |  +--------------Lemur_Lemur_catta
+                      +---| (90/85)
+                          +------------------------------------Mouse_Lemur_Microcebus_murinus
+
+Tree in newick format:
+
+(Human_Homo_sapiens:0.0810862826,(Chimpanzee_Pan_troglodytes:0.0324125190,Bonobo_Pan_paniscus:0.0277867098)99.5/100:0.0406628912,(Gorilla_Gorilla_gorilla:0.0793760306,((Sumatran_Orangutan_Pongo_abelii:0.0523891350,Bornean_Orangutan_Pongo_pygmaeus:0.0392160497)100/100:0.0920210268,(Gibbon_Hylobates_lar:0.1584654547,((Rhesus_Macaca_mulatta:0.0862122197,Baboon_Papio_hamadryas:0.1231234928)100/100:0.1581451110,(Marmoset_Callithrix_jacchus:0.2959397401,(((Squirrel_Monkey_Saimiri_sciureus:0.1853754239,Treeshrew_Tupaia_belangeri:0.3347834329)64.8/51:0.0707992404,Lemur_Lemur_catta:0.2176960850)77.6/55:0.0428776331,Mouse_Lemur_Microcebus_murinus:0.5428048962)90/85:0.0578976610)100/100:0.1448813784)56.4/68:0.0527915021)80.3/79:0.0158291273)96.6/97:0.0255204762)90.6/95:0.0189838034);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -8409.917116
+Robinson-Foulds distance between ML tree and consensus tree: 0
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++----Human_Homo_sapiens
+|
+|  +--Chimpanzee_Pan_troglodytes
++--| (100)
+|  +--Bonobo_Pan_paniscus
+|
+|  +----Gorilla_Gorilla_gorilla
++--| (95)
+   |        +--Sumatran_Orangutan_Pongo_abelii
+   |  +-----| (100)
+   |  |     +--Bornean_Orangutan_Pongo_pygmaeus
+   +--| (97)
+      |  +----------Gibbon_Hylobates_lar
+      +--| (79)
+         |             +-----Rhesus_Macaca_mulatta
+         |  +----------| (100)
+         |  |          +-------Baboon_Papio_hamadryas
+         +--| (68)
+            |         +-------------------Marmoset_Callithrix_jacchus
+            +---------| (100)
+                      |          +-----------Squirrel_Monkey_Saimiri_sciureus
+                      |      +---| (51)
+                      |      |   +----------------------Treeshrew_Tupaia_belangeri
+                      |   +--| (55)
+                      |   |  +--------------Lemur_Lemur_catta
+                      +---| (85)
+                          +------------------------------------Mouse_Lemur_Microcebus_murinus
+
+
+Consensus tree in newick format: 
+
+(Human_Homo_sapiens:0.0810821296,(Chimpanzee_Pan_troglodytes:0.0324214899,Bonobo_Pan_paniscus:0.0277797555)100:0.0406569459,(Gorilla_Gorilla_gorilla:0.0793613579,((Sumatran_Orangutan_Pongo_abelii:0.0523992279,Bornean_Orangutan_Pongo_pygmaeus:0.0391986337)100:0.0920004919,(Gibbon_Hylobates_lar:0.1584181219,((Rhesus_Macaca_mulatta:0.0862461007,Baboon_Papio_hamadryas:0.1230513457)100:0.1580650427,(Marmoset_Callithrix_jacchus:0.2958168694,(((Squirrel_Monkey_Saimiri_sciureus:0.1853367682,Treeshrew_Tupaia_belangeri:0.3347138090)51:0.0707643589,Lemur_Lemur_catta:0.2176185166)55:0.0428042108,Mouse_Lemur_Microcebus_murinus:0.5426047888)85:0.0578886841)100:0.1448199856)68:0.0527784576)79:0.0158295304)97:0.0255188203)95:0.0189884197);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\primates_comprehensive_14_taxa_ml.treefile -m "TPM2u{3.10783,16.8552}+F{0.295301,0.324311,0.122368,0.25802}+I{0.378786}+G4{1.48493}" --length 1140
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_primates\primates_comprehensive_14_taxa_trimmed.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_bench_full_primates\primates_comprehensive_14_taxa_trimmed.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct 15 18:25:25 2026
+Total CPU time used: 5.390625 seconds (0h:0m:5s)
+Total wall-clock time used: 2.8683358 seconds (0h:0m:2s)
+

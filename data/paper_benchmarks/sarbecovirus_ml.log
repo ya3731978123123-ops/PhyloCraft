@@ -1,0 +1,138 @@
+IQ-TREE version 3.1.4 for Windows 64-bit built Sep 10 2026
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    LAPTOP-8O05KAOC (AVX2, FMA3, 15 GB RAM)
+Command: C:\Users\Alan\OneDrive\Desktop\m\bin\iqtree3.exe -s C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\sarbecovirus_trim.fasta -pre C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml -m TIM2+F+G4 -B 1000 -alrt 1000 -T 2 -redo --keep-ident
+Seed:    273321 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Thu Oct 15 18:06:36 2026
+Kernel:  AVX+FMA - 2 threads (12 CPU cores detected)
+
+Reading alignment file C:\Users\Alan\OneDrive\Desktop\m\output\tmp_paper_build\sarbecovirus_trim.fasta ... Fasta format detected
+Reading fasta file: done in 0.0004039 secs
+Alignment most likely contains DNA/RNA sequences
+Constructing alignment: done in 0.0023434 secs
+Alignment has 5 sequences with 3793 columns, 475 distinct patterns
+632 parsimony-informative, 1680 singleton sites, 1481 constant sites
+                       Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 1.4e-005 secs
+   1  SARS_CoV_2_Wuhan_Hu_1    0.00%    passed     20.15%
+   2  Bat_CoV_RaTG13           0.00%    passed     28.46%
+   3  SARS_CoV_Tor2            1.19%    passed     95.98%
+   4  Bat_SARS_like_ZC45       1.79%    passed     97.03%
+   5  MERS_CoV                 5.33%    failed      0.09%
+****  TOTAL                    1.66%  1 sequences failed composition chi2 test (p-value<5%; df=3)
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.000 seconds
+Generating 1000 samples for ultrafast bootstrap (seed: 273321)...
+
+NOTE: 2 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -16244.852
+2. Current log-likelihood: -15884.991
+3. Current log-likelihood: -15881.281
+4. Current log-likelihood: -15880.703
+5. Current log-likelihood: -15880.598
+Optimal log-likelihood: -15880.481
+Rate parameters:  A-C: 1.90873  A-G: 3.93592  A-T: 1.90873  C-G: 1.00000  C-T: 5.28581  G-T: 1.00000
+Base frequencies:  A: 0.282  C: 0.198  G: 0.186  T: 0.334
+Gamma shape alpha: 1.018
+Parameters optimization took 5 rounds (0.007 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 9.74e-005 secs
+Computing ML distances took 0.000154 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 2.55e-005 secs
+Constructing RapidNJ tree: done in 2.97e-005 secs
+Computing RapidNJ tree took 0.000111 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -15879.652
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 0.035 second
+Computing log-likelihood of 3 initial trees ... 0.001 seconds
+Current best score: -15879.652
+
+Do NNI search on 5 best initial trees
+Finish initializing candidate tree set (5)
+Current best tree score: -15879.652 / CPU time: 0.051
+Number of iterations: 5
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Iteration 10 / LogL: -15880.108 / Time: 0h:0m:0s
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+Iteration 20 / LogL: -15880.323 / Time: 0h:0m:0s
+Iteration 30 / LogL: -15880.323 / Time: 0h:0m:0s (0h:0m:0s left)
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+Iteration 40 / LogL: -15879.657 / Time: 0h:0m:0s (0h:0m:0s left)
+UPDATE BEST LOG-LIKELIHOOD: -15879.652
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+Iteration 50 / LogL: -15880.107 / Time: 0h:0m:0s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -15887.313
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+Iteration 60 / LogL: -15879.651 / Time: 0h:0m:0s (0h:0m:0s left)
+WARNING: NNI search needs unusual large number of steps (5) to converge!
+Iteration 70 / LogL: -15880.719 / Time: 0h:0m:0s (0h:0m:0s left)
+Iteration 80 / LogL: -15880.700 / Time: 0h:0m:0s (0h:0m:0s left)
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+Iteration 90 / LogL: -15879.651 / Time: 0h:0m:1s (0h:0m:0s left)
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+UPDATE BEST LOG-LIKELIHOOD: -15879.651
+Iteration 100 / LogL: -15880.462 / Time: 0h:0m:1s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -15888.170
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.999
+TREE SEARCH COMPLETED AFTER 101 ITERATIONS / Time: 0h:0m:1s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -15879.651
+2. Current log-likelihood: -15879.610
+3. Current log-likelihood: -15879.573
+4. Current log-likelihood: -15879.559
+Optimal log-likelihood: -15879.550
+Rate parameters:  A-C: 1.88513  A-G: 3.94645  A-T: 1.88513  C-G: 1.00000  C-T: 5.28786  G-T: 1.00000
+Base frequencies:  A: 0.282  C: 0.198  G: 0.186  T: 0.334
+Gamma shape alpha: 0.984
+Parameters optimization took 4 rounds (0.002 sec)
+BEST SCORE FOUND : -15879.550
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+0.116 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.splits.nex
+Total tree length: 2.032
+
+Total number of iterations: 101
+CPU time used for tree search: 1.859 sec (0h:0m:1s)
+Wall-clock time used for tree search: 1.054 sec (0h:0m:1s)
+Total CPU time used: 2.281 sec (0h:0m:2s)
+Total wall-clock time used: 1.303 sec (0h:0m:1s)
+
+Computing bootstrap consensus tree...
+Reading input file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.splits.nex...
+5 taxa and 9 splits.
+Consensus tree written to C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.contree
+Reading input trees file C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.contree
+Log-likelihood of consensus tree: -15879.550
+
+Analysis results written to: 
+  IQ-TREE report:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.iqtree
+  Maximum-likelihood tree:       C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.treefile
+  Likelihood distances:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.splits.nex
+  Consensus tree:                C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.contree
+  Screen log file:               C:\Users\Alan\OneDrive\Desktop\m\data\paper_benchmarks\sarbecovirus_ml.log
+
+Date and Time: Thu Oct 15 18:06:37 2026
