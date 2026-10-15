@@ -386,7 +386,7 @@ class NCBIGeneTab(QWidget):
         self.out_path_edit.setCursorPosition(0)
         out_row.addWidget(self.out_path_edit, 1)
         browse_btn = QPushButton("瀏覽...")
-        browse_btn.setFixedWidth(65)
+        browse_btn.setFixedWidth(75)
         browse_btn.clicked.connect(self.browse_output)
         out_row.addWidget(browse_btn)
         l_vbox.addLayout(out_row)
@@ -397,18 +397,49 @@ class NCBIGeneTab(QWidget):
         self.fetch_btn = QPushButton("🚀 開始線上擷取與座標切片")
         self.fetch_btn.setObjectName("primary_button")
         self.fetch_btn.setFixedHeight(36)
+        self.fetch_btn.setStyleSheet("""
+            QPushButton#primary_button {
+                background-color: #008287;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #00666B;
+                border-radius: 4px;
+            }
+            QPushButton#primary_button:disabled {
+                background-color: #E2E8F0;
+                border: 1px solid #CBD5E1;
+                color: #334155;
+                font-weight: bold;
+            }
+        """)
         self.fetch_btn.clicked.connect(self.start_extraction)
         act_fetch_row.addWidget(self.fetch_btn, 1)
 
         self.cancel_btn = QPushButton("⏹ 停止")
+        self.cancel_btn.setObjectName("danger_button")
         self.cancel_btn.setFixedHeight(36)
-        self.cancel_btn.setFixedWidth(65)
+        self.cancel_btn.setFixedWidth(75)
         self.cancel_btn.setEnabled(False)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton#danger_button {
+                background-color: #EF4444;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #DC2626;
+                border-radius: 4px;
+            }
+            QPushButton#danger_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                color: #94A3B8;
+            }
+        """)
         self.cancel_btn.clicked.connect(self.cancel_extraction)
         act_fetch_row.addWidget(self.cancel_btn)
         l_vbox.addLayout(act_fetch_row)
 
         self.prog_bar = QProgressBar()
+        self.prog_bar.setFixedHeight(24)
         self.prog_bar.setValue(0)
         self.prog_bar.setFormat("工具就緒")
         l_vbox.addWidget(self.prog_bar)

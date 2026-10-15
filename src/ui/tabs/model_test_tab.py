@@ -160,15 +160,15 @@ class ModelTestTab(QWidget):
         c_grid.addWidget(load_iqtree_btn, 0, 3)
         c_grid.setColumnStretch(1, 1)
 
-        # Row 1: Parameters & Action row combined
+        # Row 1: Parameters Row
         param_widget = QWidget()
         param_row = QHBoxLayout(param_widget)
         param_row.setContentsMargins(0, 0, 0, 0)
-        param_row.setSpacing(8)
+        param_row.setSpacing(10)
 
         param_row.addWidget(QLabel("模型範圍:"))
         self.scope_combo = QComboBox()
-        self.scope_combo.setFixedHeight(26)
+        self.scope_combo.setFixedHeight(28)
         self.scope_combo.addItems([
             "常用標準核酸模型 (TESTONLY: 88 種模式 + 異質率)",
             "非同質異質率模型 (TESTNEWONLY: 含 FreeRate +R, 論文最新推薦)",
@@ -181,7 +181,7 @@ class ModelTestTab(QWidget):
 
         param_row.addWidget(QLabel("評選標準:"))
         self.crit_combo = QComboBox()
-        self.crit_combo.setFixedHeight(26)
+        self.crit_combo.setFixedHeight(28)
         self.crit_combo.addItems([
             "BIC (貝氏標準 - 推薦)",
             "AIC (赤池資訊標準)",
@@ -191,37 +191,70 @@ class ModelTestTab(QWidget):
 
         param_row.addWidget(QLabel("CPU:"))
         self.thread_combo = QComboBox()
-        self.thread_combo.setFixedHeight(26)
+        self.thread_combo.setFixedHeight(28)
         self.thread_combo.addItems(["AUTO", "1", "2", "4", "8"])
         param_row.addWidget(self.thread_combo)
 
-        self.run_btn = QPushButton("▶ 開始模型檢定 (Run)")
+        c_grid.addWidget(param_widget, 1, 0, 1, 4)
+
+        # Row 2: Action Row (Spacious & Clean)
+        action_widget = QWidget()
+        act_row = QHBoxLayout(action_widget)
+        act_row.setContentsMargins(0, 4, 0, 0)
+        act_row.setSpacing(10)
+
+        self.run_btn = QPushButton("▶ 開始模型檢定 (Run ModelFinder)")
         self.run_btn.setObjectName("primary_button")
-        self.run_btn.setFixedHeight(26)
+        self.run_btn.setFixedHeight(32)
         self.run_btn.setStyleSheet("""
-            QPushButton {
+            QPushButton#primary_button {
                 background-color: #008287;
                 color: #FFFFFF;
                 font-weight: bold;
-                padding: 0 12px;
-                border-radius: 3px;
+                border: 1px solid #00666B;
+                border-radius: 4px;
+                padding: 4px 16px;
             }
-            QPushButton:hover {
+            QPushButton#primary_button:hover {
                 background-color: #006F73;
+            }
+            QPushButton#primary_button:disabled {
+                background-color: #E2E8F0;
+                border: 1px solid #CBD5E1;
+                color: #334155;
+                font-weight: bold;
             }
         """)
         self.run_btn.clicked.connect(self.start_modelfinder)
-        param_row.addWidget(self.run_btn, 1)
+        act_row.addWidget(self.run_btn, 3)
 
-        self.cancel_btn = QPushButton("■ 停止")
+        self.cancel_btn = QPushButton("■ 停止 (Stop)")
         self.cancel_btn.setObjectName("danger_button")
-        self.cancel_btn.setFixedHeight(26)
-        self.cancel_btn.setFixedWidth(65)
+        self.cancel_btn.setFixedHeight(32)
+        self.cancel_btn.setMinimumWidth(85)
         self.cancel_btn.setEnabled(False)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton#danger_button {
+                background-color: #EF4444;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #DC2626;
+                border-radius: 4px;
+                padding: 4px 12px;
+            }
+            QPushButton#danger_button:hover {
+                background-color: #DC2626;
+            }
+            QPushButton#danger_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                color: #94A3B8;
+            }
+        """)
         self.cancel_btn.clicked.connect(self.cancel_modelfinder)
-        param_row.addWidget(self.cancel_btn)
+        act_row.addWidget(self.cancel_btn, 1)
 
-        c_grid.addWidget(param_widget, 1, 0, 1, 4)
+        c_grid.addWidget(action_widget, 2, 0, 1, 4)
         cb_main_layout.addWidget(self.ctrl_content)
         layout.addWidget(self.ctrl_box)
 

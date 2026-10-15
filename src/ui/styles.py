@@ -283,11 +283,12 @@ QProgressBar {
     background-color: #F1F5F9;
     border: 1px solid #CBD5E1;
     border-radius: 4px;
-    height: 16px;
+    height: 22px;
+    min-height: 22px;
     text-align: center;
     color: #0F172A;
     font-size: 11px;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 QProgressBar::chunk {

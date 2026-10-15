@@ -102,7 +102,7 @@ class TreeTab(QWidget):
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
         self.scroll.setFrameShape(QFrame.NoFrame)
-        self.scroll.setStyleSheet("background: transparent;")
+        self.scroll.setStyleSheet("QScrollArea { background-color: transparent; border: none; } QScrollArea > QWidget > QWidget { background-color: transparent; }")
 
         form_container = QWidget()
         form_layout = QVBoxLayout(form_container)
@@ -378,7 +378,7 @@ class TreeTab(QWidget):
         form_layout.addWidget(dating_box)
 
         # 5. Step 4: Execution Actions & Next Steps
-        action_box = QGroupBox("步驟 4：極速推論與樹檢視銜接 (Run & View Tree)")
+        action_box = QGroupBox("步驟 4：極速推論與樹檢視銜接 (Run && View Tree)")
         ab_layout = QVBoxLayout(action_box)
         ab_layout.setContentsMargins(12, 14, 12, 12)
         ab_layout.setSpacing(8)
@@ -389,6 +389,31 @@ class TreeTab(QWidget):
         self.run_btn.setObjectName("primary_button")
         self.run_btn.setFixedHeight(36)
         self.run_btn.setMinimumWidth(180)
+        self.run_btn.setStyleSheet("""
+            QPushButton#primary_button {
+                background-color: #008287;
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 12px;
+                border: 1px solid #00666B;
+                border-radius: 4px;
+                padding: 6px 16px;
+            }
+            QPushButton#primary_button:hover {
+                background-color: #006F73;
+                color: #FFFFFF;
+            }
+            QPushButton#primary_button:pressed {
+                background-color: #005457;
+                color: #FFFFFF;
+            }
+            QPushButton#primary_button:disabled {
+                background-color: #E2E8F0;
+                border: 1px solid #CBD5E1;
+                color: #334155;
+                font-weight: bold;
+            }
+        """)
         self.run_btn.clicked.connect(self.start_iqtree)
         btn_row.addWidget(self.run_btn, 3)
 
@@ -397,6 +422,30 @@ class TreeTab(QWidget):
         self.cancel_btn.setFixedHeight(36)
         self.cancel_btn.setMinimumWidth(85)
         self.cancel_btn.setEnabled(False)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton#danger_button {
+                background-color: #EF4444;
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 12px;
+                border: 1px solid #DC2626;
+                border-radius: 4px;
+                padding: 5px 14px;
+            }
+            QPushButton#danger_button:hover {
+                background-color: #DC2626;
+                color: #FFFFFF;
+            }
+            QPushButton#danger_button:pressed {
+                background-color: #B91C1C;
+                color: #FFFFFF;
+            }
+            QPushButton#danger_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                color: #94A3B8;
+            }
+        """)
         self.cancel_btn.clicked.connect(self.cancel_iqtree)
         btn_row.addWidget(self.cancel_btn, 1)
 
@@ -404,6 +453,30 @@ class TreeTab(QWidget):
         self.view_btn.setObjectName("success_button")
         self.view_btn.setFixedHeight(36)
         self.view_btn.setEnabled(False)
+        self.view_btn.setStyleSheet("""
+            QPushButton#success_button {
+                background-color: #059669;
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 12px;
+                border: 1px solid #047857;
+                border-radius: 4px;
+                padding: 6px 16px;
+            }
+            QPushButton#success_button:hover {
+                background-color: #047857;
+                color: #FFFFFF;
+            }
+            QPushButton#success_button:pressed {
+                background-color: #065F46;
+                color: #FFFFFF;
+            }
+            QPushButton#success_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #CBD5E1;
+                color: #94A3B8;
+            }
+        """)
         self.view_btn.setToolTip("建樹完成後，點擊可直接於演化樹製圖工坊中進行定根、支持度數值著色與發表級圖檔匯出")
         self.view_btn.clicked.connect(self.open_tree_viewer)
         btn_row.addWidget(self.view_btn, 2)
@@ -412,7 +485,8 @@ class TreeTab(QWidget):
 
         # Dynamic Result Banner
         self.result_banner = QFrame()
-        self.result_banner.setStyleSheet("background-color: #ECFDF5; border: 1px solid #6EE7B7; border-radius: 6px; padding: 8px 12px;")
+        self.result_banner.setMinimumHeight(34)
+        self.result_banner.setStyleSheet("background-color: #ECFDF5; border: 1px solid #6EE7B7; border-radius: 6px; padding: 6px 12px;")
         rb_layout = QHBoxLayout(self.result_banner)
         rb_layout.setContentsMargins(4, 2, 4, 2)
         self.result_label = QLabel("✓ 系統發育建樹已完成！可點擊上方綠色按鈕直接於演化樹製圖工坊開啟。")

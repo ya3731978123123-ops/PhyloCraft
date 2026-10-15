@@ -205,7 +205,7 @@ class TrimmingTab(QWidget):
         layout.addWidget(method_box)
 
         # Step 3: Execution Actions & Next Steps
-        action_box = QGroupBox("步驟 3：極速執行與成果銜接 (Run & Next Steps)")
+        action_box = QGroupBox("步驟 3：極速執行與成果銜接 (Run && Next Steps)")
         ab_layout = QVBoxLayout(action_box)
         ab_layout.setContentsMargins(12, 14, 12, 12)
         ab_layout.setSpacing(8)
@@ -217,6 +217,21 @@ class TrimmingTab(QWidget):
         self.run_btn.setObjectName("primary_button")
         self.run_btn.setFixedHeight(34)
         self.run_btn.setMinimumWidth(180)
+        self.run_btn.setStyleSheet("""
+            QPushButton#primary_button {
+                background-color: #008287;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #00666B;
+                border-radius: 4px;
+            }
+            QPushButton#primary_button:disabled {
+                background-color: #E2E8F0;
+                border: 1px solid #CBD5E1;
+                color: #334155;
+                font-weight: bold;
+            }
+        """)
         self.run_btn.clicked.connect(self.start_trimming)
         btn_row.addWidget(self.run_btn, 3)
 
@@ -225,6 +240,20 @@ class TrimmingTab(QWidget):
         self.cancel_btn.setFixedHeight(34)
         self.cancel_btn.setMinimumWidth(80)
         self.cancel_btn.setEnabled(False)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton#danger_button {
+                background-color: #EF4444;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #DC2626;
+                border-radius: 4px;
+            }
+            QPushButton#danger_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                color: #94A3B8;
+            }
+        """)
         self.cancel_btn.clicked.connect(self.cancel_trimming)
         btn_row.addWidget(self.cancel_btn, 1)
 
@@ -239,6 +268,20 @@ class TrimmingTab(QWidget):
         self.to_model_btn.setObjectName("primary_button")
         self.to_model_btn.setFixedHeight(34)
         self.to_model_btn.setEnabled(False)
+        self.to_model_btn.setStyleSheet("""
+            QPushButton#primary_button {
+                background-color: #008287;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #00666B;
+                border-radius: 4px;
+            }
+            QPushButton#primary_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #CBD5E1;
+                color: #94A3B8;
+            }
+        """)
         self.to_model_btn.setToolTip("一鍵將修剪後的高品質序列送往 ModelFinder 檢定最適替代模型")
         self.to_model_btn.clicked.connect(self.open_model_test)
         btn_row.addWidget(self.to_model_btn, 2)
@@ -247,6 +290,20 @@ class TrimmingTab(QWidget):
         self.to_tree_btn.setObjectName("success_button")
         self.to_tree_btn.setFixedHeight(34)
         self.to_tree_btn.setEnabled(False)
+        self.to_tree_btn.setStyleSheet("""
+            QPushButton#success_button {
+                background-color: #059669;
+                color: #FFFFFF;
+                font-weight: bold;
+                border: 1px solid #047857;
+                border-radius: 4px;
+            }
+            QPushButton#success_button:disabled {
+                background-color: #F8FAFC;
+                border: 1px solid #CBD5E1;
+                color: #94A3B8;
+            }
+        """)
         self.to_tree_btn.setToolTip("直接將修剪後的高品質序列送往 IQ-TREE 2 推論演化樹（預設啟用 MFP 自動模型評選）")
         self.to_tree_btn.clicked.connect(self.open_tree_tab)
         btn_row.addWidget(self.to_tree_btn, 2)
@@ -255,6 +312,7 @@ class TrimmingTab(QWidget):
 
         # Dynamic Result Banner
         self.result_banner = QFrame()
+        self.result_banner.setMinimumHeight(32)
         self.result_banner.setStyleSheet("background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 4px 8px;")
         rb_layout = QHBoxLayout(self.result_banner)
         rb_layout.setContentsMargins(4, 2, 4, 2)
