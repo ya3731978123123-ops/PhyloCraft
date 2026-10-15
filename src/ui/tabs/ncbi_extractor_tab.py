@@ -302,6 +302,9 @@ class NCBIGeneTab(QWidget):
 
         self.gene_combo = QComboBox()
         self.gene_combo.setEditable(True)
+        self.gene_combo.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.gene_combo.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.gene_combo.setMinimumWidth(100)
         if self.gene_combo.lineEdit():
             self.gene_combo.lineEdit().setPlaceholderText("輸入任意欲研究之基因 (如 ETR1, rbcL, SSU, 16S, TP53...)")
         self.gene_combo.addItems([
@@ -333,10 +336,11 @@ class NCBIGeneTab(QWidget):
         # 2. Accession & Species Input (Header with inline resolve button)
         taxa_hdr = QHBoxLayout()
         taxa_hdr.setSpacing(6)
-        taxa_hdr.addWidget(QLabel("<b>2. 登錄號清單或物種俗名/學名:</b>"))
+        taxa_hdr.addWidget(QLabel("<b>2. 登錄號清單或物種名:</b>"))
         taxa_hdr.addStretch()
 
-        self.btn_resolve_taxa = QPushButton("🔍 解析物種俗名 ➔ 官方登錄號")
+        self.btn_resolve_taxa = QPushButton("🔍 智能解析俗名")
+        self.btn_resolve_taxa.setFixedWidth(105)
         self.btn_resolve_taxa.setFixedHeight(22)
         self.btn_resolve_taxa.setToolTip("輸入植物或動物俗名（如擬南芥、水稻、人類），自動搜尋解析為 NCBI 官方 RefSeq 登錄號")
         self.btn_resolve_taxa.clicked.connect(self.resolve_vernacular_names)
@@ -360,6 +364,9 @@ class NCBIGeneTab(QWidget):
         p_lbl.setStyleSheet("color: #64748B; font-size: 11px;")
         p_row.addWidget(p_lbl)
         self.preset_combo = QComboBox()
+        self.preset_combo.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.preset_combo.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.preset_combo.setMinimumWidth(100)
         self.preset_combo.addItem("-- 自行輸入任意基因與物種 (不使用範本) --")
         for p_name in NCBI_PRESETS.keys():
             self.preset_combo.addItem(p_name)
@@ -383,6 +390,9 @@ class NCBIGeneTab(QWidget):
 
         custom_layout.addWidget(QLabel("導出格式:"), 0, 2)
         self.combo_seq_type = QComboBox()
+        self.combo_seq_type.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.combo_seq_type.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.combo_seq_type.setMinimumWidth(90)
         self.combo_seq_type.addItems([
             "核酸切片 (CDS/rRNA)",
             "轉譯蛋白質 (AA)",
@@ -393,6 +403,9 @@ class NCBIGeneTab(QWidget):
 
         custom_layout.addWidget(QLabel("庫範圍:"), 1, 0)
         self.combo_db_scope = QComboBox()
+        self.combo_db_scope.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.combo_db_scope.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.combo_db_scope.setMinimumWidth(110)
         self.combo_db_scope.addItems([
             "官方精選 RefSeq (Curated/Model)",
             "涵蓋全庫 INSDC Complete CDS",
@@ -411,12 +424,15 @@ class NCBIGeneTab(QWidget):
 
         self.query_preview_edit = QLineEdit()
         self.query_preview_edit.setReadOnly(True)
+        self.query_preview_edit.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.query_preview_edit.setMinimumWidth(80)
         self.query_preview_edit.setPlaceholderText("解析或檢索時，發送至 NCBI 之真實語法將即時顯示於此...")
         self.query_preview_edit.setStyleSheet("background-color: #F8FAFC; color: #0F172A; font-family: Consolas, monospace; font-size: 10px; border: 1px solid #CBD5E1; padding: 2px 4px;")
         q_layout.addWidget(self.query_preview_edit, 1)
 
         self.btn_open_ncbi_web = QPushButton("🌐 官網開啟")
         self.btn_open_ncbi_web.setFixedHeight(22)
+        self.btn_open_ncbi_web.setFixedWidth(78)
         self.btn_open_ncbi_web.setEnabled(False)
         self.btn_open_ncbi_web.setToolTip("點擊可直接於預設瀏覽器打開 NCBI 官方 Nuccore 搜尋結果，完全消除黑箱疑慮！")
         self.btn_open_ncbi_web.clicked.connect(self.open_ncbi_in_browser)
@@ -433,10 +449,12 @@ class NCBIGeneTab(QWidget):
 
         self.out_path_edit = QLineEdit(str(DATA_DIR / "extracted_target_genes.fasta"))
         self.out_path_edit.setCursorPosition(0)
+        self.out_path_edit.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        self.out_path_edit.setMinimumWidth(80)
         out_row.addWidget(self.out_path_edit, 1)
 
         browse_btn = QPushButton("瀏覽...")
-        browse_btn.setFixedWidth(65)
+        browse_btn.setFixedWidth(60)
         browse_btn.setFixedHeight(24)
         browse_btn.clicked.connect(self.browse_output)
         out_row.addWidget(browse_btn)
@@ -567,7 +585,7 @@ class NCBIGeneTab(QWidget):
         main_splitter.addWidget(right_box)
         main_splitter.setStretchFactor(0, 0)
         main_splitter.setStretchFactor(1, 1)
-        main_splitter.setSizes([450, 750])
+        main_splitter.setSizes([500, 700])
 
         layout.addWidget(main_splitter, 1)
 
