@@ -251,36 +251,28 @@ class NCBIGeneTab(QWidget):
 
     def init_ui(self):
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 14, 16, 14)
-        layout.setSpacing(10)
+        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setSpacing(6)
 
-        # 1. Top Standalone Header Banner
+        # 1. Top Compact Standalone Header Banner
         header_box = QFrame()
-        header_box.setStyleSheet("background-color: #FFFFFF; border-radius: 6px; padding: 10px 14px; border: 1px solid #CBD5E1;")
+        header_box.setStyleSheet("background-color: #FFFFFF; border-radius: 6px; padding: 4px 10px; border: 1px solid #CBD5E1;")
         h_layout = QHBoxLayout(header_box)
         h_layout.setContentsMargins(0, 0, 0, 0)
+        h_layout.setSpacing(10)
 
-        t_vbox = QVBoxLayout()
-        t_vbox.setSpacing(2)
-
-        title_row = QHBoxLayout()
-        h_title = QLabel("<b>🌐 NCBI 特定基因檢索與全透明溯源擷取 (NCBI Gene Extractor & Provenance Audit)</b>")
-        h_title.setStyleSheet("color: #0F172A; font-size: 14px;")
-        title_row.addWidget(h_title)
+        h_title = QLabel("<b>🌐 NCBI 特定基因檢索與全透明溯源擷取</b>")
+        h_title.setStyleSheet("color: #0F172A; font-size: 13px;")
+        h_layout.addWidget(h_title)
 
         badge = QLabel("🛡️ 100% 官方可查證・杜絕黑箱序列")
-        badge.setStyleSheet("color: #0F766E; background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 1px 8px; font-size: 10px; font-weight: bold;")
-        title_row.addWidget(badge)
-        title_row.addStretch()
-        t_vbox.addLayout(title_row)
+        badge.setStyleSheet("color: #0F766E; background-color: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold;")
+        h_layout.addWidget(badge)
 
-        h_sub = QLabel(
-            "由全基因組或粒線體組之特徵註解表 (Feature Table) 自動鎖定 CDS/rRNA 座標，處理正負股反向互補並精準切片，"
-            "同時產出附帶 NCBI 官方連結與 SHA-256 數位指紋之溯源報告書。"
-        )
+        h_sub = QLabel("自動鎖定 CDS/rRNA 座標反向互補切片，附帶 SHA-256 與官方溯源")
         h_sub.setStyleSheet("color: #64748B; font-size: 11px;")
-        t_vbox.addWidget(h_sub)
-        h_layout.addLayout(t_vbox, 1)
+        h_layout.addWidget(h_sub)
+        h_layout.addStretch()
 
         layout.addWidget(header_box)
 
@@ -291,17 +283,23 @@ class NCBIGeneTab(QWidget):
         # ===== LEFT PANEL: Inputs & Config =====
         left_scroll = QScrollArea()
         left_scroll.setWidgetResizable(True)
-        left_scroll.setMinimumWidth(430)
+        left_scroll.setMinimumWidth(400)
         left_scroll.setFrameShape(QFrame.NoFrame)
-        left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        left_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         left_box = QGroupBox("步驟 1：檢索設定與登錄號清單 (Query Configuration)")
         l_vbox = QVBoxLayout(left_box)
-        l_vbox.setContentsMargins(10, 12, 14, 12)
-        l_vbox.setSpacing(8)
+        l_vbox.setContentsMargins(8, 8, 8, 8)
+        l_vbox.setSpacing(5)
 
-        # 1. Target Gene Input (Primary Research Focus)
-        l_vbox.addWidget(QLabel("<b>1. 目標基因代號或蛋白名 (Target Gene):</b>"))
+        # 1. Target Gene Input (Primary Research Focus) - Inline compact
+        gene_row = QHBoxLayout()
+        gene_row.setSpacing(6)
+        gene_lbl = QLabel("<b>1. 目標基因:</b>")
+        gene_lbl.setFixedWidth(82)
+        gene_row.addWidget(gene_lbl)
+
         self.gene_combo = QComboBox()
         self.gene_combo.setEditable(True)
         if self.gene_combo.lineEdit():
@@ -329,120 +327,127 @@ class NCBIGeneTab(QWidget):
             "ND1 (NADH 脫氫酶 1)",
             "ND6 (NADH 脫氫酶 6 負股)",
         ])
-        l_vbox.addWidget(self.gene_combo)
+        gene_row.addWidget(self.gene_combo, 1)
+        l_vbox.addLayout(gene_row)
 
-        # 2. Accession & Species Input (Primary Research Focus)
-        l_vbox.addWidget(QLabel("<b>2. NCBI 登錄號清單或物種俗名/學名 (Taxa / Accessions):</b>"))
+        # 2. Accession & Species Input (Header with inline resolve button)
+        taxa_hdr = QHBoxLayout()
+        taxa_hdr.setSpacing(6)
+        taxa_hdr.addWidget(QLabel("<b>2. 登錄號清單或物種俗名/學名:</b>"))
+        taxa_hdr.addStretch()
+
+        self.btn_resolve_taxa = QPushButton("🔍 解析物種俗名 ➔ 官方登錄號")
+        self.btn_resolve_taxa.setFixedHeight(22)
+        self.btn_resolve_taxa.setToolTip("輸入植物或動物俗名（如擬南芥、水稻、人類），自動搜尋解析為 NCBI 官方 RefSeq 登錄號")
+        self.btn_resolve_taxa.clicked.connect(self.resolve_vernacular_names)
+        taxa_hdr.addWidget(self.btn_resolve_taxa)
+        l_vbox.addLayout(taxa_hdr)
+
         self.taxa_edit = QTextEdit()
         self.taxa_edit.setPlaceholderText(
-            "自由輸入任何格式（支援通用自訂）：\n"
-            "1. 任意 NCBI 登錄號 (如 NM_105305.4, NR_024570.1, NC_000932.1)\n"
-            "2. 植物或動物物種中文俗名 (如 擬南芥、水稻、番茄、玉米、大豆、茶樹)\n"
-            "3. 物種學名 (如 Arabidopsis thaliana, Homo sapiens)\n"
-            "每行一筆，系統將完全依據您自訂之研究數據動態至 NCBI 檢索與精準切片！"
+            "自由輸入任何格式（每行一筆，支援自訂）：\n"
+            "1. NCBI 登錄號 (如 NM_105305.4, NR_024570.1, NC_000932.1)\n"
+            "2. 物種俗名或學名 (如 擬南芥、水稻、Homo sapiens)\n"
+            "系統將完全依據您自訂之研究數據動態至 NCBI 檢索與精準切片！"
         )
-        self.taxa_edit.setFixedHeight(95)
+        self.taxa_edit.setFixedHeight(58)
         l_vbox.addWidget(self.taxa_edit)
 
-        # Taxa Resolve Action Button
-        self.btn_resolve_taxa = QPushButton("🔍 解析物種俗名 ➔ 官方登錄號")
-        self.btn_resolve_taxa.setFixedHeight(28)
-        self.btn_resolve_taxa.setToolTip("輸入植物中文俗名（如擬南芥、番茄、水稻、玉米、茶樹），一鍵自動搜尋並解析為 NCBI 官方 RefSeq 登錄號")
-        self.btn_resolve_taxa.clicked.connect(self.resolve_vernacular_names)
-        l_vbox.addWidget(self.btn_resolve_taxa)
-
-        # 3. Optional Presets (Secondary Helper - 非核心流程，供快速測試)
-        preset_frame = QFrame()
-        preset_frame.setStyleSheet("background-color: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 4px; padding: 4px 6px;")
-        p_box = QVBoxLayout(preset_frame)
-        p_box.setContentsMargins(4, 4, 4, 4)
-        p_box.setSpacing(4)
-        p_lbl = QLabel("💡 <i>快速載入示範測試資料 (可選，供快速體驗，可完全不使用)：</i>")
+        # 3. Optional Presets (Secondary Helper - 單行緊湊)
+        p_row = QHBoxLayout()
+        p_row.setSpacing(6)
+        p_lbl = QLabel("💡 <i>示範範本 (可選):</i>")
         p_lbl.setStyleSheet("color: #64748B; font-size: 11px;")
-        p_box.addWidget(p_lbl)
+        p_row.addWidget(p_lbl)
         self.preset_combo = QComboBox()
         self.preset_combo.addItem("-- 自行輸入任意基因與物種 (不使用範本) --")
         for p_name in NCBI_PRESETS.keys():
             self.preset_combo.addItem(p_name)
         self.preset_combo.currentTextChanged.connect(self.on_preset_changed)
-        p_box.addWidget(self.preset_combo)
-        l_vbox.addWidget(preset_frame)
+        p_row.addWidget(self.preset_combo, 1)
+        l_vbox.addLayout(p_row)
 
-        # Researcher Customization Options (研究者進階客製選項)
+        # 4. Researcher Customization Options (雙行緊湊網格)
         custom_box = QGroupBox("⚙️ 研究者進階設定 (Customization)")
         custom_layout = QGridLayout(custom_box)
-        custom_layout.setContentsMargins(8, 8, 8, 8)
-        custom_layout.setSpacing(6)
+        custom_layout.setContentsMargins(6, 4, 6, 4)
+        custom_layout.setHorizontalSpacing(8)
+        custom_layout.setVerticalSpacing(3)
 
-        custom_layout.addWidget(QLabel("演化群代表物種數:"), 0, 0)
+        custom_layout.addWidget(QLabel("代表物種數:"), 0, 0)
         self.spin_max_taxa = QSpinBox()
         self.spin_max_taxa.setRange(2, 30)
         self.spin_max_taxa.setValue(8)
-        self.spin_max_taxa.setToolTip("當輸入目/綱/門/科高階群時，透過 NCBI 伺服器依 TaxId 自動均勻抽樣之代表物種上限 (2~30 種)")
+        self.spin_max_taxa.setToolTip("當輸入目/綱/門/科高階群時，透過 NCBI 伺服器依 TaxId 自動均勻抽樣之代表物種上限")
         custom_layout.addWidget(self.spin_max_taxa, 0, 1)
 
-        custom_layout.addWidget(QLabel("序列導出格式:"), 1, 0)
+        custom_layout.addWidget(QLabel("導出格式:"), 0, 2)
         self.combo_seq_type = QComboBox()
         self.combo_seq_type.addItems([
-            "核酸特徵切片 (CDS/rRNA)",
-            "轉譯蛋白質 (Amino Acids)",
-            "雙軌輸出 (CDS + 蛋白質)",
+            "核酸切片 (CDS/rRNA)",
+            "轉譯蛋白質 (AA)",
+            "雙軌輸出 (CDS+AA)",
         ])
         self.combo_seq_type.setToolTip("選擇產出核酸 CDS 序列、由特徵表自動轉譯之蛋白質胺基酸序列，或同時雙軌輸出兩份 FASTA")
-        custom_layout.addWidget(self.combo_seq_type, 1, 1)
+        custom_layout.addWidget(self.combo_seq_type, 0, 3)
 
-        custom_layout.addWidget(QLabel("資料庫範圍:"), 2, 0)
+        custom_layout.addWidget(QLabel("庫範圍:"), 1, 0)
         self.combo_db_scope = QComboBox()
         self.combo_db_scope.addItems([
             "官方精選 RefSeq (Curated/Model)",
             "涵蓋全庫 INSDC Complete CDS",
         ])
         self.combo_db_scope.setToolTip("預設採 NCBI 官方最高品質 RefSeq 基準；非模式生物可切換至全庫完整 CDS 擴大收錄範圍")
-        custom_layout.addWidget(self.combo_db_scope, 2, 1)
-        custom_layout.setColumnStretch(1, 1)
+        custom_layout.addWidget(self.combo_db_scope, 1, 1, 1, 3)
+        custom_layout.setColumnStretch(3, 1)
 
         l_vbox.addWidget(custom_box)
 
-        # Query Transparency Inspector (NCBI 檢索語法即時透視)
+        # 5. Query Transparency Inspector (單行緊湊透視)
         query_box = QGroupBox("🔍 NCBI 檢索語法即時透視 (Query Inspector)")
-        q_vbox = QVBoxLayout(query_box)
-        q_vbox.setContentsMargins(8, 8, 8, 8)
-        q_vbox.setSpacing(4)
+        q_layout = QHBoxLayout(query_box)
+        q_layout.setContentsMargins(6, 4, 6, 4)
+        q_layout.setSpacing(6)
 
         self.query_preview_edit = QLineEdit()
         self.query_preview_edit.setReadOnly(True)
-        self.query_preview_edit.setPlaceholderText("解析或檢索時，系統發送至 NCBI 之真實語法將即時顯示於此...")
+        self.query_preview_edit.setPlaceholderText("解析或檢索時，發送至 NCBI 之真實語法將即時顯示於此...")
         self.query_preview_edit.setStyleSheet("background-color: #F8FAFC; color: #0F172A; font-family: Consolas, monospace; font-size: 10px; border: 1px solid #CBD5E1; padding: 2px 4px;")
-        q_vbox.addWidget(self.query_preview_edit)
+        q_layout.addWidget(self.query_preview_edit, 1)
 
-        self.btn_open_ncbi_web = QPushButton("🌐 在 NCBI 官網開啟此檢索語法")
-        self.btn_open_ncbi_web.setFixedHeight(24)
+        self.btn_open_ncbi_web = QPushButton("🌐 官網開啟")
+        self.btn_open_ncbi_web.setFixedHeight(22)
         self.btn_open_ncbi_web.setEnabled(False)
         self.btn_open_ncbi_web.setToolTip("點擊可直接於預設瀏覽器打開 NCBI 官方 Nuccore 搜尋結果，完全消除黑箱疑慮！")
         self.btn_open_ncbi_web.clicked.connect(self.open_ncbi_in_browser)
-        q_vbox.addWidget(self.btn_open_ncbi_web)
+        q_layout.addWidget(self.btn_open_ncbi_web)
 
         l_vbox.addWidget(query_box)
 
-        # Output Path
-        l_vbox.addWidget(QLabel("<b>導出 FASTA 路徑:</b>"))
+        # 6. Output Path (單行水平緊湊)
         out_row = QHBoxLayout()
         out_row.setSpacing(6)
+        out_lbl = QLabel("<b>導出 FASTA:</b>")
+        out_lbl.setFixedWidth(82)
+        out_row.addWidget(out_lbl)
+
         self.out_path_edit = QLineEdit(str(DATA_DIR / "extracted_target_genes.fasta"))
         self.out_path_edit.setCursorPosition(0)
         out_row.addWidget(self.out_path_edit, 1)
+
         browse_btn = QPushButton("瀏覽...")
-        browse_btn.setFixedWidth(75)
+        browse_btn.setFixedWidth(65)
+        browse_btn.setFixedHeight(24)
         browse_btn.clicked.connect(self.browse_output)
         out_row.addWidget(browse_btn)
         l_vbox.addLayout(out_row)
 
-        # Action Button & Progress
+        # 7. Action Button & Progress
         act_fetch_row = QHBoxLayout()
         act_fetch_row.setSpacing(6)
         self.fetch_btn = QPushButton("🚀 開始線上擷取與座標切片")
         self.fetch_btn.setObjectName("primary_button")
-        self.fetch_btn.setFixedHeight(36)
+        self.fetch_btn.setFixedHeight(34)
         self.fetch_btn.setStyleSheet("""
             QPushButton#primary_button {
                 background-color: #008287;
@@ -463,8 +468,8 @@ class NCBIGeneTab(QWidget):
 
         self.cancel_btn = QPushButton("⏹ 停止")
         self.cancel_btn.setObjectName("danger_button")
-        self.cancel_btn.setFixedHeight(36)
-        self.cancel_btn.setFixedWidth(75)
+        self.cancel_btn.setFixedHeight(34)
+        self.cancel_btn.setFixedWidth(65)
         self.cancel_btn.setEnabled(False)
         self.cancel_btn.setStyleSheet("""
             QPushButton#danger_button {
@@ -485,7 +490,7 @@ class NCBIGeneTab(QWidget):
         l_vbox.addLayout(act_fetch_row)
 
         self.prog_bar = QProgressBar()
-        self.prog_bar.setFixedHeight(24)
+        self.prog_bar.setFixedHeight(18)
         self.prog_bar.setValue(0)
         self.prog_bar.setFormat("工具就緒")
         l_vbox.addWidget(self.prog_bar)
