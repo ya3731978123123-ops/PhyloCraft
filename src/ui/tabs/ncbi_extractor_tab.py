@@ -306,30 +306,33 @@ class NCBIGeneTab(QWidget):
         self.gene_combo.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
         self.gene_combo.setMinimumWidth(100)
         if self.gene_combo.lineEdit():
-            self.gene_combo.lineEdit().setPlaceholderText("輸入任意欲研究之基因 (如 ETR1, rbcL, SSU, 16S, TP53...)")
+            self.gene_combo.lineEdit().setPlaceholderText("輸入任意基因 (如 ETR1, rbcL, SSU, 16S, TP53...)")
         self.gene_combo.addItems([
-            "SSU / 16S / 18S 核糖體小次單元 RNA (生命三域演化經典)",
-            "ETR1 / 乙烯受體 1 (植物荷爾蒙感知, ~2200 bp)",
-            "rbcL / 核酮糖二磷酸羧化酶大亞基 (植物光合作用核心, ~1430 bp)",
-            "matK / 成熟酶 K (植物葉綠體DNA條形碼, ~1530 bp)",
-            "psbA / 光系統 II D1 蛋白 (~1060 bp)",
-            "CYTB / 細胞色素 b (粒線體演化經典, ~1140 bp)",
-            "COX1 / 細胞色素 c 氧化酶 I (動物條形碼)",
-            "TP53 / P53 / 腫瘤抑制蛋白 P53 (細胞週期與抑癌基因, ~1182 bp)",
-            "MB / 肌紅蛋白 (動物肌肉儲氧蛋白, ~465 bp)",
-            "HBB / 血紅蛋白 β 亞基 (脊椎動物氧氣運輸)",
-            "GAPDH / 甘油醛-3-磷酸脫氫酶 (通用管家蛋白)",
-            "ACTB / 肌動蛋白 (微絲細胞骨架)",
-            "INS / 胰島素 (代謝荷爾蒙)",
-            "ALB / 白蛋白 (血清滲透壓維持)",
-            "HSP70 / 熱休克蛋白 70 (抗逆熱震蛋白)",
-            "16S / 16S 核糖體 RNA (菌種鑑定)",
-            "18S / 18S 核糖體 RNA (真核核糖體)",
-            "ITS / 內部轉錄間隔區 (植物真菌條形碼)",
-            "S / Spike 刺突蛋白 (冠狀病毒, ~3800 bp)",
+            "SSU (16S/18S rRNA 三域演化)",
+            "ETR1 (乙烯受體 1, 植物)",
+            "rbcL (核酮糖羧化酶, 葉綠體)",
+            "matK (成熟酶 K, 條形碼)",
+            "psbA (光系統 II D1 蛋白)",
+            "CYTB (細胞色素 b, 粒線體)",
+            "COX1 (細胞色素 c 氧化酶 I)",
+            "TP53 (腫瘤抑制蛋白 P53)",
+            "MB (肌紅蛋白, 肌肉儲氧)",
+            "HBB (血紅蛋白 β 亞基)",
+            "GAPDH (甘油醛-3-磷酸脫氫酶)",
+            "ACTB (肌動蛋白, 細胞骨架)",
+            "INS (胰島素, 代謝荷爾蒙)",
+            "ALB (白蛋白, 滲透壓維持)",
+            "HSP70 (熱休克蛋白 70)",
+            "16S rRNA (細菌/古菌鑑定)",
+            "18S rRNA (真核生物鑑定)",
+            "ITS (內部轉錄間隔區)",
+            "S (Spike 刺突蛋白, 冠狀病毒)",
             "ND1 (NADH 脫氫酶 1)",
             "ND6 (NADH 脫氫酶 6 負股)",
         ])
+        self.gene_combo.currentIndexChanged.connect(
+            lambda: self.gene_combo.lineEdit() and self.gene_combo.lineEdit().setCursorPosition(0)
+        )
         gene_row.addWidget(self.gene_combo, 1)
         l_vbox.addLayout(gene_row)
 
@@ -339,9 +342,10 @@ class NCBIGeneTab(QWidget):
         taxa_hdr.addWidget(QLabel("<b>2. 登錄號清單或物種名:</b>"))
         taxa_hdr.addStretch()
 
-        self.btn_resolve_taxa = QPushButton("🔍 智能解析俗名")
-        self.btn_resolve_taxa.setFixedWidth(105)
+        self.btn_resolve_taxa = QPushButton("🔍 解析俗名")
+        self.btn_resolve_taxa.setMinimumWidth(80)
         self.btn_resolve_taxa.setFixedHeight(22)
+        self.btn_resolve_taxa.setStyleSheet("padding: 2px 6px; font-size: 11px;")
         self.btn_resolve_taxa.setToolTip("輸入植物或動物俗名（如擬南芥、水稻、人類），自動搜尋解析為 NCBI 官方 RefSeq 登錄號")
         self.btn_resolve_taxa.clicked.connect(self.resolve_vernacular_names)
         taxa_hdr.addWidget(self.btn_resolve_taxa)
