@@ -216,6 +216,13 @@ def run_interactive_ui_tests():
             recent_f.unlink(missing_ok=True)
         for p in OUTPUT_DIR.glob("*.phylo"):
             shutil.rmtree(p, ignore_errors=True)
+        for p in OUTPUT_DIR.glob("provenance_audit_test*"):
+            shutil.rmtree(p, ignore_errors=True)
+        for p in OUTPUT_DIR.glob("test_*"):
+            if p.is_dir():
+                shutil.rmtree(p, ignore_errors=True)
+            else:
+                p.unlink(missing_ok=True)
 
         leftovers = list(OUTPUT_DIR.iterdir())
         assert len(leftovers) == 0, f"Lingering files found: {leftovers}"

@@ -49,12 +49,18 @@ def run_deep_edge_tests():
         # ---------------------------------------------------------
         print("\n[Deep 1/5] Testing Alignment Format Converter Round-Trip Integrity...")
         primates_fa = DATA_DIR / "primates_cytb.fasta"
+        aligned_fa = test_dir / "aligned_sample.fasta"
+        raw_recs = list(SeqIO.parse(str(primates_fa), "fasta"))
+        min_len = min(len(r.seq) for r in raw_recs)
+        aligned_recs = [SeqRecord(r.seq[:min_len], id=r.id, description="") for r in raw_recs]
+        SeqIO.write(aligned_recs, str(aligned_fa), "fasta")
+
         f_nexus = test_dir / "converted.nex"
         f_phy = test_dir / "converted.phy"
         f_roundtrip = test_dir / "roundtrip.fasta"
 
         # 1. FASTA -> NEXUS
-        ok1, msg1 = convert_alignment(primates_fa, f_nexus, in_format="fasta", out_format="nexus")
+        ok1, msg1 = convert_alignment(aligned_fa, f_nexus, in_format="fasta", out_format="nexus")
         assert ok1, f"FASTA -> NEXUS failed: {msg1}"
         assert f_nexus.exists() and f_nexus.stat().st_size > 0
 
@@ -68,7 +74,7 @@ def run_deep_edge_tests():
         assert ok3, f"PHYLIP -> FASTA failed: {msg3}"
         assert f_roundtrip.exists()
 
-        orig_recs = {r.id: str(r.seq).upper() for r in SeqIO.parse(str(primates_fa), "fasta")}
+        orig_recs = {r.id: str(r.seq).upper() for r in SeqIO.parse(str(aligned_fa), "fasta")}
         round_recs = {r.id: str(r.seq).upper() for r in SeqIO.parse(str(f_roundtrip), "fasta")}
 
         assert set(orig_recs.keys()) == set(round_recs.keys()), "Taxa sets do not match after roundtrip"
@@ -206,7 +212,7 @@ def run_deep_edge_tests():
         if ft_path:
             import subprocess
             ft_out = test_dir / "fasttree_result.nwk"
-            cmd = [ft_path, "-nt", "-quiet", str(primates_fa)]
+            cmd = [ft_path, "-nt", "-quiet", str(aligned_fa)]
             proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             assert proc.returncode == 0, f"FastTree failed with code {proc.returncode}: {proc.stderr}"
             assert "(" in proc.stdout and ");" in proc.stdout

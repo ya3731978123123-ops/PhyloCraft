@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phylocraft"
+version = "0.2.0"
+description = "Modern graphical evolutionary biology and phylogenetic workbench"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "PhyloCraft Contributors" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+    "PySide6>=6.5.0",
+    "biopython>=1.80",
+    "matplotlib>=3.7.0",
+    "pandas>=2.0.0",
+    "toytree>=3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ya3731978123123-ops/PhyloCraft"
+Repository = "https://github.com/ya3731978123123-ops/PhyloCraft.git"
+Issues = "https://github.com/ya3731978123123-ops/PhyloCraft/issues"
+
+[project.scripts]
+phylocraft = "main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]

@@ -310,7 +310,7 @@ def test_feature_extraction_whitebox_logic():
 def test_network_and_fault_tolerance():
     print("\n[Stress Test 3/5] Testing Network Error Handling & Friendly Diagnostics...")
     extractor = GeneExtractor()
-    out_tmp = PROJECT_ROOT / "data" / "test_stress_err.fasta"
+    out_tmp = PROJECT_ROOT / "output" / "test_stress_err.fasta"
 
     # 1. Unparsable / malformed accession format
     result_malformed = extractor.extract_target_genes(
@@ -342,7 +342,7 @@ def test_network_and_fault_tolerance():
 def test_async_worker_cancellation():
     print("\n[Stress Test 4/5] Testing Asynchronous Worker Thread Cancellation...")
     app = get_qapp()
-    out_tmp = PROJECT_ROOT / "data" / "test_stress_cancel.fasta"
+    out_tmp = PROJECT_ROOT / "output" / "test_stress_cancel.fasta"
 
     # Launch worker with multiple accessions
     targets = ["NC_003428.1", "NC_003427.1", "NC_003426.1", "NC_009970.1"]
