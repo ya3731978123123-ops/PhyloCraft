@@ -430,6 +430,8 @@ class GeneExtractor:
         "金黃色葡萄球菌": "Staphylococcus aureus",
         "銅綠假單胞菌": "Pseudomonas aeruginosa",
         "綠膿桿菌": "Pseudomonas aeruginosa",
+        "嗜熱四膜蟲": "Tetrahymena thermophila",
+        "四膜蟲": "Tetrahymena",
 
         # 高階演化群 / 門綱目科屬 (Clades & Higher Taxa)
         "節肢動物": "Arthropoda",
@@ -1426,6 +1428,51 @@ class GeneExtractor:
                         retrieved_at=now_str,
                     )
 
+        # Pass 3: Dedicated single-gene / RNA accession fallback (e.g. older EMBL/GenBank entries like X56165.1)
+        # where the entire entry is the target gene itself and only 'source' is annotated
+        if is_rna_target and len(record.seq) < 5000:
+            title_upper = (record.description or "").upper()
+            kw_upper = " ".join(record.annotations.get("keywords", [])).upper()
+            combined_desc = f"{title_upper} {kw_upper}"
+            rna_matches = any(
+                pat in combined_desc for pat in patterns
+            ) or ("RIBOSOMAL" in combined_desc and ("SMALL SUBUNIT" in combined_desc or "SSU" in combined_desc))
+            if rna_matches:
+                extracted_seq = str(record.seq)
+                clean_org = re.sub(r"[^a-zA-Z0-9_]", "_", org_name.strip()).replace("__", "_")
+                start_1 = 1
+                end_1 = len(extracted_seq)
+                strand_sym = "+"
+                strand_val = 1
+                coord_str = f"1..{end_1} (+)"
+                sha256 = hashlib.sha256(extracted_seq.encode("utf-8")).hexdigest()
+                md5 = hashlib.md5(extracted_seq.encode("utf-8")).hexdigest()
+                header = f"{clean_org}|{record.id}:{start_1}-{end_1}({strand_sym})|{target_norm}"
+                ncbi_url = f"https://www.ncbi.nlm.nih.gov/nuccore/{record.id}"
+                now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                return ExtractedGeneRecord(
+                    accession=record.id,
+                    organism=org_name,
+                    gene_symbol=target_norm,
+                    product=record.description,
+                    start=start_1,
+                    end=end_1,
+                    strand=strand_val,
+                    seq_length=len(extracted_seq),
+                    sequence=extracted_seq,
+                    header=header,
+                    ncbi_url=ncbi_url,
+                    taxid=taxid,
+                    protein_id="N/A",
+                    translation="",
+                    protein_length=0,
+                    sha256_hash=sha256,
+                    md5_hash=md5,
+                    coordinates_str=coord_str,
+                    retrieved_at=now_str,
+                )
+
         return None
 
     @classmethod
@@ -1619,11 +1666,17 @@ class GeneExtractor:
 
         # 2. Quality Control: Homology & Length Discrepancy Check (Paralog / Domain truncation detection)
         length_warnings: list[str] = []
+        is_rna = any(r in (canonical or target_gene).upper() for r in ("16S", "18S", "SSU", "12S", "28S", "RRNA", "RNR"))
         if len(extracted_records) >= 3:
             lengths = [r.seq_length for r in extracted_records]
             lengths.sort()
             median_len = lengths[len(lengths) // 2]
             for r in extracted_records:
+                # SSU rRNA domain check: 16S in prokaryotes is ~1400-1600 bp; 18S in eukaryotes is ~1700-1950 bp due to expansion segments
+                if is_rna and 1350 <= r.seq_length <= 1980:
+                    r.qc_status = "正常 (Passed)"
+                    continue
+
                 diff_ratio = abs(r.seq_length - median_len) / median_len if median_len > 0 else 0
                 if diff_ratio > 0.15:
                     status = f"過長 (+{int(diff_ratio*100)}%)" if r.seq_length > median_len else f"過短 (-{int(diff_ratio*100)}%)"

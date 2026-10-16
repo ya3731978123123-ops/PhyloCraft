@@ -529,25 +529,25 @@ class NCBIGeneTab(QWidget):
         self.table.setHorizontalHeaderLabels([
             "物種名稱 (Organism)",
             "NCBI 登錄號",
-            "特徵座標 (Location)",
+            "特徵座標",
             "長度",
             "蛋白質 ID",
-            "SHA-256 數位指紋",
-            "官方溯源連結"
+            "SHA-256 指紋",
+            "官方溯源"
         ])
         header = self.table.horizontalHeader()
         header.setStretchLastSection(False)
-        header.setMinimumSectionSize(60)
+        header.setMinimumSectionSize(50)
         for col_idx in range(7):
             header.setSectionResizeMode(col_idx, QHeaderView.Interactive)
 
-        self.table.setColumnWidth(0, 185)  # 物種名稱 (Organism) - prominent and wide
-        self.table.setColumnWidth(1, 110)  # NCBI 登錄號
+        self.table.setColumnWidth(0, 215)  # 物種名稱 (Organism)
+        self.table.setColumnWidth(1, 95)   # NCBI 登錄號
         self.table.setColumnWidth(2, 105)  # 特徵座標 (Location)
-        self.table.setColumnWidth(3, 90)   # 長度
-        self.table.setColumnWidth(4, 85)   # 蛋白質 ID
-        self.table.setColumnWidth(5, 105)  # SHA-256 數位指紋
-        self.table.setColumnWidth(6, 115)  # 官方溯源連結
+        self.table.setColumnWidth(3, 80)   # 長度
+        self.table.setColumnWidth(4, 75)   # 蛋白質 ID
+        self.table.setColumnWidth(5, 95)   # SHA-256 指紋
+        self.table.setColumnWidth(6, 85)   # 官方溯源
         self.table.setAlternatingRowColors(True)
         r_vbox.addWidget(self.table)
 
@@ -897,16 +897,15 @@ class NCBIGeneTab(QWidget):
             self.table.setItem(row, 5, item_sha)
 
             # 6: Clickable URL Action
-            btn_link = QPushButton("🔗 NCBI 官方直達")
+            btn_link = QPushButton("🔗 NCBI")
             btn_link.setCursor(Qt.PointingHandCursor)
-            btn_link.setStyleSheet("color: #008287; text-decoration: underline; background: transparent; border: none; font-size: 11px; font-weight: bold;")
+            btn_link.setStyleSheet("color: #008287; text-decoration: underline; background: transparent; border: none; font-size: 11px; font-weight: bold; padding: 0px;")
             url_str = r.ncbi_url
             btn_link.clicked.connect(lambda _, u=url_str: QDesktopServices.openUrl(QUrl(u)))
             self.table.setCellWidget(row, 6, btn_link)
 
-        # Dynamically fit column 0 to display full organism names cleanly without clipping
-        self.table.resizeColumnToContents(0)
-        self.table.setColumnWidth(0, max(185, min(self.table.columnWidth(0) + 20, 320)))
+        # Maintain balanced column 0 width (~215px) so all columns fit within viewport without horizontal scrolling
+        self.table.setColumnWidth(0, 215)
 
     def export_report(self):
         if not self.current_result or not self.current_result.output_csv:
