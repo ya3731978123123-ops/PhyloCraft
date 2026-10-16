@@ -399,9 +399,37 @@ class GeneExtractor:
         "大鼠": "Rattus norvegicus",
         "斑馬魚": "Danio rerio",
         "果蠅": "Drosophila melanogaster",
-        "黑腹果蠅": "Drosophila melanogaster",
         "酵母": "Saccharomyces cerevisiae",
+        "釀酒酵母": "Saccharomyces cerevisiae",
+        "裂殖酵母": "Schizosaccharomyces pombe",
         "大腸桿菌": "Escherichia coli",
+
+        # 微生物、古菌與藍綠菌 (Microbes, Archaea, Bacteria & Cyanobacteria)
+        "沃氏嗜鹽古菌": "Haloferax volcanii",
+        "嗜鹽古菌": "Haloferax volcanii",
+        "嗜熱硫化葉菌": "Sulfolobus mongibelli",
+        "硫化葉菌": "Sulfolobus",
+        "詹氏甲烷球菌": "Methanocaldococcus jannaschii",
+        "熱自養甲烷嗜熱桿菌": "Methanothermobacter thermautotrophicus",
+        "海棲熱袍菌": "Thermotoga maritima",
+        "風神水生菌": "Aquifex aeolicus",
+        "水生棲熱菌": "Thermus aquaticus",
+        "集胞藻": "Synechocystis",
+        "藍綠菌": "Synechocystis",
+        "聚球藻": "Synechococcus",
+        "枯草芽孢桿菌": "Bacillus subtilis",
+        "枯草桿菌": "Bacillus subtilis",
+        "新月柄桿菌": "Caulobacter crescentus",
+        "柄桿菌": "Caulobacter",
+        "漢氏巴爾通體": "Bartonella henselae",
+        "巴爾通體": "Bartonella",
+        "水生環狀桿菌": "Ancylobacter aquaticus",
+        "環狀桿菌": "Ancylobacter",
+        "結核分枝桿菌": "Mycobacterium tuberculosis",
+        "幽門螺旋桿菌": "Helicobacter pylori",
+        "金黃色葡萄球菌": "Staphylococcus aureus",
+        "銅綠假單胞菌": "Pseudomonas aeruginosa",
+        "綠膿桿菌": "Pseudomonas aeruginosa",
 
         # 高階演化群 / 門綱目科屬 (Clades & Higher Taxa)
         "節肢動物": "Arthropoda",
@@ -821,6 +849,41 @@ class GeneExtractor:
         return ""
 
     @classmethod
+    def translate_latin_to_chinese_organism(cls, latin_name: str) -> str:
+        """
+        Translates a Latin scientific name or organism string to its Chinese vernacular name if known.
+        Matches exact, two-word binomial prefix (e.g. 'Haloferax volcanii DS2' -> 'Haloferax volcanii'),
+        or genus (e.g. 'Synechocystis sp. PCC 6803' -> 'Synechocystis').
+        """
+        if not latin_name:
+            return ""
+        clean = latin_name.strip()
+        # Build inverted mapping once if not cached
+        if not hasattr(cls, "_LATIN_TO_CHINESE_MAP") or getattr(cls, "_LATIN_TO_CHINESE_MAP") is None:
+            rev: dict[str, str] = {}
+            for zh, lat in cls.CHINESE_ORGANISM_MAP.items():
+                if lat not in rev:
+                    rev[lat] = zh
+            cls._LATIN_TO_CHINESE_MAP = rev
+
+        # 1. Exact match
+        if clean in cls._LATIN_TO_CHINESE_MAP:
+            return cls._LATIN_TO_CHINESE_MAP[clean]
+
+        # 2. Check binomial prefix (first 2 words)
+        words = clean.split()
+        if len(words) >= 2:
+            two_words = f"{words[0]} {words[1]}"
+            if two_words in cls._LATIN_TO_CHINESE_MAP:
+                return cls._LATIN_TO_CHINESE_MAP[two_words]
+
+        # 3. Check genus (first word)
+        if words and words[0] in cls._LATIN_TO_CHINESE_MAP:
+            return cls._LATIN_TO_CHINESE_MAP[words[0]]
+
+        return ""
+
+    @classmethod
     def search_online_taxonomy_for_chinese(cls, chinese_name: str, timeout: int = 8) -> str:
         """
         Dynamically resolves ANY arbitrary Chinese vernacular plant or animal name
@@ -1217,7 +1280,21 @@ class GeneExtractor:
             ([p.strip().upper() for p in alias_patterns] if alias_patterns else [])
         ))
 
-        org_name = record.annotations.get("organism", record.id)
+        org_name = record.annotations.get("organism", "").strip()
+        if not org_name or org_name == record.id:
+            for feat in record.features:
+                if feat.type == "source":
+                    org_list = feat.qualifiers.get("organism", [])
+                    if org_list and org_list[0]:
+                        org_name = org_list[0].strip()
+                        break
+        if not org_name or org_name == record.id:
+            if record.description and record.description != record.id:
+                parts = record.description.split()
+                if len(parts) >= 2:
+                    org_name = f"{parts[0]} {parts[1]}"
+        if not org_name:
+            org_name = record.id
 
         # TaxID extraction from source feature
         taxid = ""

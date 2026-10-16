@@ -527,7 +527,7 @@ class NCBIGeneTab(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels([
-            "物種學名 (Organism)",
+            "物種名稱 (Organism)",
             "NCBI 登錄號",
             "特徵座標 (Location)",
             "長度",
@@ -537,19 +537,17 @@ class NCBIGeneTab(QWidget):
         ])
         header = self.table.horizontalHeader()
         header.setStretchLastSection(False)
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Interactive)
-        header.setSectionResizeMode(2, QHeaderView.Interactive)
-        header.setSectionResizeMode(3, QHeaderView.Interactive)
-        header.setSectionResizeMode(4, QHeaderView.Interactive)
-        header.setSectionResizeMode(5, QHeaderView.Interactive)
-        header.setSectionResizeMode(6, QHeaderView.Interactive)
-        self.table.setColumnWidth(1, 125)
-        self.table.setColumnWidth(2, 115)
-        self.table.setColumnWidth(3, 115)
-        self.table.setColumnWidth(4, 110)
-        self.table.setColumnWidth(5, 120)
-        self.table.setColumnWidth(6, 135)
+        header.setMinimumSectionSize(60)
+        for col_idx in range(7):
+            header.setSectionResizeMode(col_idx, QHeaderView.Interactive)
+
+        self.table.setColumnWidth(0, 185)  # 物種名稱 (Organism) - prominent and wide
+        self.table.setColumnWidth(1, 110)  # NCBI 登錄號
+        self.table.setColumnWidth(2, 105)  # 特徵座標 (Location)
+        self.table.setColumnWidth(3, 90)   # 長度
+        self.table.setColumnWidth(4, 85)   # 蛋白質 ID
+        self.table.setColumnWidth(5, 105)  # SHA-256 數位指紋
+        self.table.setColumnWidth(6, 115)  # 官方溯源連結
         self.table.setAlternatingRowColors(True)
         r_vbox.addWidget(self.table)
 
@@ -847,8 +845,20 @@ class NCBIGeneTab(QWidget):
     def populate_provenance_table(self, records: list[ExtractedGeneRecord]):
         self.table.setRowCount(len(records))
         for row, r in enumerate(records):
-            # 0: Organism
-            item_org = QTableWidgetItem(r.organism)
+            # 0: Organism (Scientific name + Vernacular name if available)
+            org_display = r.organism or "未知物種"
+            zh_name = GeneExtractor.translate_latin_to_chinese_organism(org_display)
+            if zh_name and zh_name not in org_display:
+                display_text = f"{org_display} ({zh_name})"
+                item_org = QTableWidgetItem(display_text)
+                item_org.setToolTip(f"物種學名: {org_display}\n常用中文俗名: {zh_name}\nTaxID: {r.taxid or '未標註'}")
+            else:
+                item_org = QTableWidgetItem(org_display)
+                item_org.setToolTip(f"物種學名: {org_display}\nTaxID: {r.taxid or '未標註'}")
+            font = item_org.font()
+            font.setBold(True)
+            item_org.setFont(font)
+            item_org.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             self.table.setItem(row, 0, item_org)
 
             # 1: Accession
@@ -893,6 +903,10 @@ class NCBIGeneTab(QWidget):
             url_str = r.ncbi_url
             btn_link.clicked.connect(lambda _, u=url_str: QDesktopServices.openUrl(QUrl(u)))
             self.table.setCellWidget(row, 6, btn_link)
+
+        # Dynamically fit column 0 to display full organism names cleanly without clipping
+        self.table.resizeColumnToContents(0)
+        self.table.setColumnWidth(0, max(185, min(self.table.columnWidth(0) + 20, 320)))
 
     def export_report(self):
         if not self.current_result or not self.current_result.output_csv:

@@ -123,8 +123,11 @@ def test_ncbi_gene_tab():
     app.processEvents()
 
     assert tab.table.rowCount() == 2
+    # Check column 0 header and width
+    assert tab.table.horizontalHeaderItem(0).text() == "物種名稱 (Organism)"
+    assert tab.table.columnWidth(0) >= 150
     # Check row 0
-    assert tab.table.item(0, 0).text() == "Arabidopsis thaliana"
+    assert "Arabidopsis thaliana" in tab.table.item(0, 0).text()
     assert tab.table.item(0, 1).text() == "NM_105305.4"
     assert "312..2528" in tab.table.item(0, 2).text()
     assert tab.table.item(0, 3).text() == "306 bp"
@@ -132,7 +135,7 @@ def test_ncbi_gene_tab():
     assert tab.table.item(0, 5).text() == "e3b0c44298..."
     assert tab.table.cellWidget(0, 6) is not None
     # Check row 1
-    assert tab.table.item(1, 0).text() == "Ursus maritimus"
+    assert "Ursus maritimus" in tab.table.item(1, 0).text()
     assert tab.table.item(1, 1).text() == "NC_003428.1"
     assert "14138..15277" in tab.table.item(1, 2).text()
     assert tab.table.item(1, 3).text() == "1140 bp"
